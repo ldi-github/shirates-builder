@@ -422,7 +422,7 @@ class EditViewModel(
         return relativeItem
     }
 
-    val IOS_RATIO = 3
+    val IOS_RATIO = 3.0
 
     private fun getScrollHostSelectorItemsMap(items: List<SelectorItem>): Map<String, MutableList<SelectorItem>> {
 

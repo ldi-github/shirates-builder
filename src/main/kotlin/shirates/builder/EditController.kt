@@ -786,7 +786,7 @@ class EditController : Initializable {
         imagePane.children.removeAll(removingShapes)
 
         refreshImageRatio()
-        val r = editViewModel.imageRatioProperty.value * (if (TestMode.isiOS) editViewModel.IOS_RATIO else 1)
+        val r = editViewModel.imageRatioProperty.value * (if (TestMode.isiOS) editViewModel.IOS_RATIO else 1.0)
 
         val rect =
             Rectangle(

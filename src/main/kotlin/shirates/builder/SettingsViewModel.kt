@@ -117,6 +117,7 @@ class SettingsViewModel(
 
         System.setProperty(UserVar.SHIRATES_PROJECT_DIR, projectDirectory)
         PropertiesManager.setup(testrunFile = testrunFile)
+        PropertiesManager.setPropertyValue("screenshotScale","1.0")
         if (androidSelectedProperty.value) {
             PropertiesManager.properties.set("os", "android")
         } else {
