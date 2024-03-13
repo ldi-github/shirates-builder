@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane fx:id="rootNode" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shirates.builder.SettingsController">
+   <children>
+      <GridPane fx:id="settingsGridPane" layoutX="10.0" layoutY="10.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" maxWidth="594.0" minWidth="10.0" prefWidth="121.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1083.0" minWidth="10.0" prefWidth="1071.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="19.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="41.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="42.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="45.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="51.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="42.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="165.0" minHeight="0.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="338.0" minHeight="0.0" prefHeight="54.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="437.0" minHeight="10.0" prefHeight="66.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="471.0" minHeight="10.0" prefHeight="314.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="107.0" minHeight="0.0" prefHeight="107.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="Project Directory" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="projectDirectoryTextField" editable="false" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" HBox.hgrow="ALWAYS" />
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </HBox>
+            <Label text="testrun File" GridPane.rowIndex="2">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox fx:id="testrunfileHBox" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="testrunFileTextField" promptText="Drop properties file to this area" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="testrunFileButton" mnemonicParsing="false" text="..." />
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </HBox>
+            <Label text="Platform" GridPane.rowIndex="4">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <RadioButton fx:id="androidRadioButton" mnemonicParsing="false" selected="true" text="Android">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="platformGroup" />
+                     </toggleGroup>
+                     <HBox.margin>
+                        <Insets left="8.0" top="4.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <RadioButton fx:id="iosRadioButton" mnemonicParsing="false" text="iOS" toggleGroup="$platformGroup">
+                     <HBox.margin>
+                        <Insets left="18.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets top="4.0" />
+                     </padding>
+                  </RadioButton>
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="16.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </HBox>
+            <Label fx:id="welcomeText" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label text="Session" GridPane.rowIndex="5">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <Button fx:id="startButton" mnemonicParsing="false" prefWidth="100.0" text="Start">
+                     <HBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </HBox.margin>
+                  </Button>
+                  <ProgressIndicator fx:id="sessionProgressIndicator" prefWidth="20.0">
+                     <HBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </HBox.margin>
+                  </ProgressIndicator>
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </HBox>
+            <Label text="XML File" GridPane.rowIndex="6">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" fx:id="xmlfileHBox">
+               <children>
+                  <Button fx:id="loadXmlButton" mnemonicParsing="false" prefWidth="100.0" text="Load">
+                     <HBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </HBox.margin>
+                  </Button>
+                  <TextField HBox.hgrow="ALWAYS" fx:id="xmlFileTextField" />
+                  <Button mnemonicParsing="false" text="..." fx:id="xmlFileButton" />
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </HBox>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
