@@ -20,7 +20,7 @@ import java.io.FileNotFoundException
 import kotlin.io.path.nameWithoutExtension
 
 class EditViewModel(
-    val mainViewModel: MainViewModel
+    val screenBuilderViewModel: ScreenBuilderViewModel
 ) {
     @Undoable
     lateinit var screenItems: ObservableList<ScreenItem>
@@ -229,7 +229,7 @@ class EditViewModel(
             throw IllegalArgumentException("No xml file found in ${directory}.")
         }
 
-        mainViewModel.settingsViewModel.setupConfig()
+        screenBuilderViewModel.settingsViewModel.setupConfig()
 
         for (f in files) {
             val screenItem = getOrCreateScreenItem(f.toString())
@@ -300,7 +300,7 @@ class EditViewModel(
         val screenItem = selectedScreenItem
         xmlFile = screenItem?.xmlFile ?: ""
         if (screenItem == null) {
-            val prefs = mainViewModel.getPreferences()
+            val prefs = screenBuilderViewModel.getPreferences()
             xmlFile = prefs.get("xmlFile", "")
             refresh()
             return
@@ -315,7 +315,7 @@ class EditViewModel(
         selectorItems.clear()
         selectorItems.addAll(screenItem.selectorItems)
         refresh()
-        mainViewModel.savePreferences()
+        screenBuilderViewModel.savePreferences()
     }
 
     fun getRatio(): Double {

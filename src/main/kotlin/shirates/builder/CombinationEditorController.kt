@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.util.Callback
 import kotlinx.coroutines.DelicateCoroutinesApi
+import shirates.builder.utility.LoopCanceler
 import shirates.builder.utility.draganddrop.DragAndDropHelper
 import shirates.builder.utility.draganddrop.acceptCopy
 import shirates.builder.utility.undo.UndoTargets
@@ -138,7 +139,7 @@ class CombinationEditorController : Initializable {
                 undoTargets = UndoTargets(viewModel, viewModel.editViewModel)
             ) { data ->
                 viewModel.addItem(item)
-                editController.mainController.refresh()
+                editController.screenBuilderController.refresh()
             }
             e.consume()
         }

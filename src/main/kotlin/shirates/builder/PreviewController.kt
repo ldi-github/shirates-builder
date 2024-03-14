@@ -14,10 +14,10 @@ import java.util.*
 
 class PreviewController : Initializable {
 
-    lateinit var mainController: MainController
-    val mainViewModel: MainViewModel
+    lateinit var screenBuilderController: ScreenBuilderController
+    val screenBuilderViewModel: ScreenBuilderViewModel
         get() {
-            return mainController.mainViewModel
+            return screenBuilderController.screenBuilderViewModel
         }
 
     lateinit var previewViewModel: PreviewViewModel
@@ -45,9 +45,9 @@ class PreviewController : Initializable {
 
     }
 
-    internal fun setup(mainController: MainController) {
+    internal fun setup(screenBuilderController: ScreenBuilderController) {
 
-        this.mainController = mainController
+        this.screenBuilderController = screenBuilderController
 
         setupViewModel()
 
@@ -57,7 +57,7 @@ class PreviewController : Initializable {
 
     private fun setupViewModel() {
 
-        previewViewModel = mainViewModel.previewViewModel
+        previewViewModel = screenBuilderViewModel.previewViewModel
 
     }
 

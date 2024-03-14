@@ -21,10 +21,10 @@ import java.util.*
 
 class SettingsController : Initializable {
 
-    lateinit var mainController: MainController
-    val mainViewModel: MainViewModel
+    lateinit var screenBuilderController: ScreenBuilderController
+    val screenBuilderViewModel: ScreenBuilderViewModel
         get() {
-            return mainController.mainViewModel
+            return screenBuilderController.screenBuilderViewModel
         }
 
     lateinit var settingsViewModel: SettingsViewModel
@@ -78,9 +78,9 @@ class SettingsController : Initializable {
         setupDragAndDrop()
     }
 
-    internal fun setup(mainController: MainController) {
+    internal fun setup(screenBuilderController: ScreenBuilderController) {
 
-        this.mainController = mainController
+        this.screenBuilderController = screenBuilderController
 
         setupViewModel()
 
@@ -90,7 +90,7 @@ class SettingsController : Initializable {
 
     private fun setupViewModel() {
 
-        settingsViewModel = mainController.mainViewModel.settingsViewModel
+        settingsViewModel = screenBuilderController.screenBuilderViewModel.settingsViewModel
     }
 
     private fun setupBinding() {
@@ -99,14 +99,14 @@ class SettingsController : Initializable {
         testrunFileTextField.textProperty().bindBidirectional(settingsViewModel.testrunFileProperty)
         androidRadioButton.selectedProperty().bindBidirectional(settingsViewModel.androidSelectedProperty)
         iosRadioButton.selectedProperty().bindBidirectional(settingsViewModel.iosSelectedProperty)
-        xmlFileTextField.textProperty().bindBidirectional(mainViewModel.editViewModel.xmlFileProperty)
+        xmlFileTextField.textProperty().bindBidirectional(screenBuilderViewModel.editViewModel.xmlFileProperty)
 
-        mainViewModel.disabledProperty.bindDisable(
+        screenBuilderViewModel.disabledProperty.bindDisable(
             testrunFileTextField, testrunFileButton,
             androidRadioButton, iosRadioButton, startButton,
             loadXmlButton, xmlFileTextField, xmlFileButton
         )
-        sessionProgressIndicator.visibleProperty().bind(mainViewModel.disabledProperty)
+        sessionProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
     }
 
     private fun setupDragAndDrop() {
@@ -132,7 +132,7 @@ class SettingsController : Initializable {
             val dragboard = e.dragboard
             if (dragboard.hasFiles()) {
                 val file = dragboard.files.first()
-                mainViewModel.editViewModel.xmlFileProperty.set(file.path)
+                screenBuilderViewModel.editViewModel.xmlFileProperty.set(file.path)
             }
             e.isDropCompleted = true
             e.consume()
@@ -156,29 +156,29 @@ class SettingsController : Initializable {
             if (validateTestrunFile().not()) {
                 return@setOnAction
             }
-            mainViewModel.savePreferences()
-            mainController.editController.clearImagePane()
-            mainViewModel.disable()
+            screenBuilderViewModel.savePreferences()
+            screenBuilderController.editController.clearImagePane()
+            screenBuilderViewModel.disable()
 
             runAsync(
                 backgroundAction = {
                     settingsViewModel.startSession()
                 },
                 onProgressEnd = {
-                    mainViewModel.enable()
+                    screenBuilderViewModel.enable()
                 }
             ) {
-                mainController.selectTab("Edit")
+                screenBuilderController.selectTab("Edit")
             }
         }
         xmlFileButton.setOnAction {
             if (validateTestrunFile().not()) {
                 return@setOnAction
             }
-            mainController.editController.xmlFileButtonAction()
+            screenBuilderController.editController.xmlFileButtonAction()
         }
         loadXmlButton.setOnAction {
-            mainController.editController.loadXmlButtonAction()
+            screenBuilderController.editController.loadXmlButtonAction()
         }
     }
 

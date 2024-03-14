@@ -19,7 +19,7 @@ import shirates.core.utility.toPath
 import java.nio.file.Path
 
 class SettingsViewModel(
-    val mainViewModel: MainViewModel
+    val screenBuilderViewModel: ScreenBuilderViewModel
 ) {
 
     val projectDirectoryProperty = SimpleStringProperty()
@@ -54,7 +54,7 @@ class SettingsViewModel(
 
     fun startSession() {
 
-        mainViewModel.editViewModel.clearEditData()
+        screenBuilderViewModel.editViewModel.clearEditData()
 
         setupConfig()
 
@@ -77,7 +77,7 @@ class SettingsViewModel(
         }
         profile.validate()
 
-        TestLog.currentTestClass = MainViewModel::class.java
+        TestLog.currentTestClass = ScreenBuilderViewModel::class.java
 
         // Appium Server
         if (testContext.isLocalServer) {
@@ -109,7 +109,7 @@ class SettingsViewModel(
                 TestDriver.resetAppiumSession()
             }
         }
-        mainViewModel.editViewModel.xmlFile = ""
+        screenBuilderViewModel.editViewModel.xmlFile = ""
         TestLog.info("Click to capture screen.")
     }
 

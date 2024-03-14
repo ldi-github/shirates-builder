@@ -11,7 +11,7 @@ import shirates.core.utility.toPath
 import shirates.spec.utilily.removeBrackets
 
 class PreviewViewModel(
-    val mainViewModel: MainViewModel
+    val screenBuilderViewModel: ScreenBuilderViewModel
 ) {
     @Undoable
     var key: String
@@ -107,7 +107,7 @@ class PreviewViewModel(
 
     fun refresh() {
 
-        val xmlFilePath = mainViewModel.editViewModel.xmlFile.toPath()
+        val xmlFilePath = screenBuilderViewModel.editViewModel.xmlFile.toPath()
         if (xmlFilePath.exists()) {
             val filename =
                 if (key.isNotBlank()) "$key.json"
@@ -120,7 +120,7 @@ class PreviewViewModel(
 
     fun refreshPreviewJson() {
 
-        val vm = mainViewModel.editViewModel
+        val vm = screenBuilderViewModel.editViewModel
         val scrollableToSelectorItemsMap = vm.getScrollHostSelectorItemsMap()
         val identity = vm.identityViewModel.combinedKey
         val satellites = vm.satellitesViewModel.items

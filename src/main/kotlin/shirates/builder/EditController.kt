@@ -39,10 +39,10 @@ import java.util.*
 
 class EditController : Initializable {
 
-    lateinit var mainController: MainController
-    val mainViewModel: MainViewModel
+    lateinit var screenBuilderController: ScreenBuilderController
+    val screenBuilderViewModel: ScreenBuilderViewModel
         get() {
-            return mainController.mainViewModel
+            return screenBuilderController.screenBuilderViewModel
         }
 
     lateinit var identityController: CombinationEditorController
@@ -192,9 +192,9 @@ class EditController : Initializable {
 
     }
 
-    internal fun setup(mainController: MainController) {
+    internal fun setup(screenBuilderController: ScreenBuilderController) {
 
-        this.mainController = mainController
+        this.screenBuilderController = screenBuilderController
 
         setupViewModel()
         setupViewModelListeners()
@@ -259,7 +259,7 @@ class EditController : Initializable {
 
     private fun setupViewModel() {
 
-        editViewModel = mainController.mainViewModel.editViewModel
+        editViewModel = screenBuilderController.screenBuilderViewModel.editViewModel
         editViewModel.screenItems = screenListView.items
         editViewModel.selectorItems = selectorsTableView.items
     }
@@ -333,7 +333,7 @@ class EditController : Initializable {
             cellTextField.textProperty().bind(cellProperty)
             scrollHostTextField.textProperty().bind(scrollHostProperty)
         }
-        captureProgressIndicator.visibleProperty().bind(mainViewModel.disabledProperty)
+        captureProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
 
         val list = NodeUtility.getAllNodes(editorTabPane)
         println(list)
@@ -444,8 +444,8 @@ class EditController : Initializable {
                         val delete = {
                             undoManager.doAction(
                                 undoTargets = UndoTargets(editViewModel),
-                                undoAction = { mainViewModel.refresh() },
-                                redoAction = { mainViewModel.refresh() }
+                                undoAction = { screenBuilderViewModel.refresh() },
+                                redoAction = { screenBuilderViewModel.refresh() }
                             ) { data ->
                                 editViewModel.deleteScreenItem(item)
                             }
@@ -515,12 +515,12 @@ class EditController : Initializable {
         nicknameTextField.textProperty().addListener { o, old, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.nickname = new
-            mainController.refresh()
+            screenBuilderController.refresh()
         }
         selectorExpressionTextField.textProperty().addListener { o, old, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.selectorExpression = new
-            mainController.refresh()
+            screenBuilderController.refresh()
         }
     }
 
@@ -573,7 +573,7 @@ class EditController : Initializable {
             }
         }
         editViewModel.loadXmlFromDirectory(xmlFile.toPath().parent.toString())
-        mainController.selectTab("Edit")
+        screenBuilderController.selectTab("Edit")
     }
 
     private fun setupButtonActions() {
@@ -581,10 +581,10 @@ class EditController : Initializable {
         captureButton.setOnAction {
             if (testDrive.driver.isReady.not()) {
                 DialogHelper.showInformation("Appium is not ready. Start Appium session.")
-                mainController.selectTab("Settings")
+                screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            mainViewModel.disable()
+            screenBuilderViewModel.disable()
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
@@ -597,17 +597,17 @@ class EditController : Initializable {
                     editViewModel.getSelectorItemsForWidgets()
                 },
                 onProgressEnd = {
-                    mainViewModel.enable()
+                    screenBuilderViewModel.enable()
                 }
             )
         }
         captureWithScrollButton.setOnAction {
             if (testDrive.driver.isReady.not()) {
                 DialogHelper.showInformation("Appium is not ready. Start Appium session.")
-                mainController.selectTab("Settings")
+                screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            mainViewModel.disable()
+            screenBuilderViewModel.disable()
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
@@ -625,7 +625,7 @@ class EditController : Initializable {
                 foregroundAction = {
                     editViewModel.loadXmlFromDirectory()
                 }, onProgressEnd = {
-                    mainViewModel.enable()
+                    screenBuilderViewModel.enable()
                 }
             )
         }
@@ -640,7 +640,7 @@ class EditController : Initializable {
             }
         }
         previewJsonButton.setOnAction {
-            mainController.selectTab("Preview")
+            screenBuilderController.selectTab("Preview")
         }
         nextScreenButton.setOnAction {
             val item = editViewModel.nextScreenItem()
