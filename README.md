@@ -16,6 +16,6 @@ This is pre-release version.
 ### Capturing screen (in Edit tab)
 1. Click [Capture] button.
 
-### Previw JSON (in Preview tab)
+### Preview JSON (in Preview tab)
 1. See Preview tab.
 
