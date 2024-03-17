@@ -11,7 +11,7 @@ plugins {
 group = "shirates"
 version = "0.9.0-SNAPSHOT"
 
-val shiratesCoreVersion = "6.7.2"
+val shiratesCoreVersion = "6.7.3-SNAPSHOT"
 val appiumClientVersion = "9.1.0"
 
 val userHome = System.getProperty("user.home")
@@ -20,7 +20,7 @@ repositories {
     mavenCentral()
 
     maven(url = "file:/$userHome/github/ldi-github/shirates-core/build/repository")
-//    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
 tasks.withType<JavaCompile> {

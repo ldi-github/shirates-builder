@@ -16,7 +16,7 @@ fun SimpleBooleanProperty.bindDisableAllUnder(
     node: Node,
     excepts: List<Node> = mutableListOf()
 ) {
-    val allNodes = NodeUtility.getAllNodes(node)
+    val allNodes = NodeUtility.getDescendants(node)
     for (n in allNodes) {
         bindDisableAllUnderCore(n, excepts)
     }

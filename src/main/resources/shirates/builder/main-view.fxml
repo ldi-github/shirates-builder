@@ -10,10 +10,5 @@
          <VBox.margin>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
          </VBox.margin></Button>
-      <Button mnemonicParsing="false" prefWidth="200.0" text="Template Code  Generator">
-         <VBox.margin>
-            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-         </VBox.margin>
-      </Button>
    </children>
 </VBox>

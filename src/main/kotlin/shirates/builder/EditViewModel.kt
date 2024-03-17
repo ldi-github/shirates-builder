@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
+import javafx.scene.control.TreeItem
 import javafx.scene.input.MouseEvent
 import shirates.builder.utility.TestElementRelativeUtility
 import shirates.builder.utility.undo.Undoable
@@ -52,9 +53,6 @@ class EditViewModel(
     val upSelectedProperty = SimpleBooleanProperty()
 
     @Undoable
-    val selectedScreenItemProperty = SimpleObjectProperty<ScreenItem>()
-
-    @Undoable
     var selectedScreenItem: ScreenItem?
         get() {
             return selectedScreenItemProperty.value
@@ -62,8 +60,7 @@ class EditViewModel(
         set(value) {
             selectedScreenItemProperty.set(value)
         }
-
-    val selectedSelectorItemProperty = SimpleObjectProperty<SelectorItem>()
+    val selectedScreenItemProperty = SimpleObjectProperty<ScreenItem>()
 
     @Undoable
     var selectedSelectorItem: SelectorItem?
@@ -73,8 +70,7 @@ class EditViewModel(
         set(value) {
             selectedSelectorItemProperty.set(value)
         }
-
-    var selectedIdentityItemProperty = SimpleObjectProperty<SelectorItem>()
+    val selectedSelectorItemProperty = SimpleObjectProperty<SelectorItem>()
 
     @Undoable
     var selectedIdentityItem: SelectorItem?
@@ -84,8 +80,7 @@ class EditViewModel(
         set(value) {
             selectedIdentityItemProperty.set(value)
         }
-
-    val selectedNicknameProperty = SimpleStringProperty()
+    var selectedIdentityItemProperty = SimpleObjectProperty<SelectorItem>()
 
     @Undoable
     var selectedNickname: String
@@ -95,11 +90,7 @@ class EditViewModel(
         set(value) {
             selectedNicknameProperty.set(value)
         }
-
-    @Undoable
-    var selectedNicknameCommitted: String = ""
-
-    val selectedSelectorExpressionProperty = SimpleStringProperty()
+    val selectedNicknameProperty = SimpleStringProperty()
 
     @Undoable
     var selectedSelectorExpression: String
@@ -109,6 +100,8 @@ class EditViewModel(
         set(value) {
             selectedSelectorExpressionProperty.set(value)
         }
+    val selectedSelectorExpressionProperty = SimpleStringProperty()
+
 
     val widgetProperty = SimpleStringProperty()
     val classOrTypeProperty = SimpleStringProperty()
@@ -129,27 +122,31 @@ class EditViewModel(
             if (new == null) {
                 return@addListener
             }
-            val e = new.testElement
-            val widget = ElementCategoryExpressionUtility.getCategory(e).toString().lowercase()
-            widgetProperty.set(widget)
-            classOrTypeProperty.set(e.classOrType)
-            textOrLabelProperty.set(e.textOrLabel)
-            idOrNameProperty.set(e.idOrNameSimple)
-            accessProperty.set(e.access)
-            val bounds = e.bounds.toString().split("centerX")[0].trim()
-            boundsProperty.set("$bounds width=${e.bounds.width}, height=${e.bounds.height}")
-            val cell = e.getCell()
-            if (cell.isEmpty) {
-                cellProperty.set("")
-            } else {
-                cellProperty.set(cell.toString())
-            }
-            val scrollHost = e.ancestorScrollable
-            if (scrollHost.isEmpty) {
-                scrollHostProperty.set("")
-            } else {
-                scrollHostProperty.set(scrollHost.toString())
-            }
+            refreshFields(testElement = new.testElement)
+        }
+    }
+
+    fun refreshFields(testElement: TestElement) {
+
+        val widget = ElementCategoryExpressionUtility.getCategory(testElement).toString().lowercase()
+        widgetProperty.set(widget)
+        classOrTypeProperty.set(testElement.classOrType)
+        textOrLabelProperty.set(testElement.textOrLabel)
+        idOrNameProperty.set(testElement.idOrNameSimple)
+        accessProperty.set(testElement.access)
+        val bounds = testElement.bounds.toString().split("centerX")[0].trim()
+        boundsProperty.set("$bounds width=${testElement.bounds.width}, height=${testElement.bounds.height}")
+        val cell = testElement.getCell()
+        if (cell.isEmpty) {
+            cellProperty.set("")
+        } else {
+            cellProperty.set(cell.toString())
+        }
+        val scrollHost = testElement.ancestorScrollable
+        if (scrollHost.isEmpty) {
+            scrollHostProperty.set("")
+        } else {
+            scrollHostProperty.set(scrollHost.toString())
         }
     }
 
@@ -298,16 +295,34 @@ class EditViewModel(
         selectorItems.clear()
 
         val screenItem = selectedScreenItem
-        xmlFile = screenItem?.xmlFile ?: ""
         if (screenItem == null) {
             val prefs = screenBuilderViewModel.getPreferences()
             xmlFile = prefs.get("xmlFile", "")
             refresh()
             return
         }
-        TestElementCache.loadXml(screenItem.xmlFile.toPath().toFile().readText())
-        TestElementCache.synced = true
-        println("changeToSelectedScreen. ${screenItem.xmlFile}")
+        if (screenItem.rootElement.isEmpty) {
+            TestElementCache.loadXml(screenItem.xmlFile.toPath().toFile().readText())
+            TestElementCache.synced = true
+            screenItem.rootElement = TestElementCache.rootElement
+            screenItem.rootTreeItem = TreeItem<TestElement>()
+
+            fun setChildTreeItem(treeItem: TreeItem<TestElement>, testElement: TestElement) {
+                treeItem.value = testElement
+                for (c in testElement.children) {
+                    val ti = TreeItem(c)
+                    treeItem.children.add(ti)
+                    setChildTreeItem(treeItem = ti, testElement = c)
+                }
+            }
+
+            val treeItem = TreeItem<TestElement>()
+            setChildTreeItem(treeItem = treeItem, testElement = rootElement)
+            screenItem.rootTreeItem = treeItem
+        }
+
+        TestElementCache.rootElement = screenItem.rootElement
+
         if (screenItem.selectorItems.isEmpty()) {
             val items = getSelectorItemsForWidgets()
             screenItem.selectorItems.addAll(items)
@@ -316,6 +331,17 @@ class EditViewModel(
         selectorItems.addAll(screenItem.selectorItems)
         refresh()
         screenBuilderViewModel.savePreferences()
+    }
+
+    fun getTreeItemOf(testElement: TestElement): TreeItem<TestElement>? {
+
+        return selectedScreenItem?.getTreeItemOf(testElement)
+    }
+
+    fun getSelectorItemOf(testElement: TestElement): SelectorItem? {
+
+        val e = selectorItems.firstOrNull() { it.testElement == testElement }
+        return e
     }
 
     fun getRatio(): Double {
@@ -364,13 +390,14 @@ class EditViewModel(
 
     fun getElementsOnImage(e: MouseEvent): List<TestElement> {
 
+        if (selectedScreenItem == null) return listOf()
         val ratio = getRatio()
         val x = (e.x / ratio).toInt()
         val y = (e.y / ratio).toInt()
         val bounds = Bounds(left = x, top = y, width = 1, height = 1)
-        val elements = TestElementCache.allElements
+        val elements = selectedScreenItem!!.rootElement.descendantsAndSelf
             .filter { bounds.isIncludedIn(it.bounds) && it.isEmpty.not() }
-            .sortedBy { it.bounds.area }
+            .reversed()
         return elements
     }
 
@@ -394,14 +421,7 @@ class EditViewModel(
     fun selectItemOnImage(e: MouseEvent): SelectorItem? {
 
         val item = getItemOnImage(e) ?: return null
-        selectedSelectorItemProperty.set(item)
-        return item
-    }
-
-    fun selectElementOnImage(e: MouseEvent): SelectorItem? {
-
-        val item = getItemOnImage(e) ?: return null
-        selectedSelectorItemProperty.set(item)
+        selectedSelectorItem = item
         return item
     }
 
