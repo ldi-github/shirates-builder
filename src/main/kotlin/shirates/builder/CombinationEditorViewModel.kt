@@ -71,7 +71,7 @@ class CombinationEditorViewModel(
         isPromptVisibleProperty.set(true)
 
         isAutoCheckBoxSelectedProperty.addListener { _, _, new ->
-            editViewModel.mainViewModel.savePreferences()
+            editViewModel.screenBuilderViewModel.savePreferences()
             if (new == true) {
                 editViewModel.refreshSatelliteCandidates()
             }

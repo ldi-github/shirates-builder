@@ -21,9 +21,11 @@ import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.draganddrop.pushObject
 import shirates.builder.utility.runAsync
 import shirates.builder.utility.undo.*
+import shirates.core.configuration.PropertiesManager
 import shirates.core.configuration.ScreenInfo
 import shirates.core.configuration.repository.ScreenRepository
 import shirates.core.driver.Bounds
+import shirates.core.driver.TestElement
 import shirates.core.driver.TestMode
 import shirates.core.driver.commandextension.*
 import shirates.core.driver.testDrive
@@ -39,10 +41,10 @@ import java.util.*
 
 class EditController : Initializable {
 
-    lateinit var mainController: MainController
-    val mainViewModel: MainViewModel
+    lateinit var screenBuilderController: ScreenBuilderController
+    val screenBuilderViewModel: ScreenBuilderViewModel
         get() {
-            return mainController.mainViewModel
+            return screenBuilderController.screenBuilderViewModel
         }
 
     lateinit var identityController: CombinationEditorController
@@ -137,6 +139,15 @@ class EditController : Initializable {
     private lateinit var keyInfoColumn: TableColumn<*, *>
 
     @FXML
+    private lateinit var nicknamesTab: Tab
+
+    @FXML
+    private lateinit var elementsTab: Tab
+
+    @FXML
+    private lateinit var elementsTreeView: TreeView<TestElement>
+
+    @FXML
     private lateinit var nicknameTextField: TextField
 
     @FXML
@@ -187,14 +198,15 @@ class EditController : Initializable {
 
     val undoManager = UndoManager()
 
+    var rootTreeItem = TreeItem<TestElement>(TestElement.emptyElement)
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
 
     }
 
-    internal fun setup(mainController: MainController) {
+    internal fun setup(screenBuilderController: ScreenBuilderController) {
 
-        this.mainController = mainController
+        this.screenBuilderController = screenBuilderController
 
         setupViewModel()
         setupViewModelListeners()
@@ -204,6 +216,8 @@ class EditController : Initializable {
         setupImagePane()
         setupScreenListView()
         setupSelectorsTablesView()
+        setupElementsTreeView()
+
         setupTextFieldListeners()
         setupTextFieldWatchers()
         setupButtonActions()
@@ -259,7 +273,7 @@ class EditController : Initializable {
 
     private fun setupViewModel() {
 
-        editViewModel = mainController.mainViewModel.editViewModel
+        editViewModel = screenBuilderController.screenBuilderViewModel.editViewModel
         editViewModel.screenItems = screenListView.items
         editViewModel.selectorItems = selectorsTableView.items
     }
@@ -267,6 +281,7 @@ class EditController : Initializable {
     private fun setupViewModelListeners() {
 
         editViewModel.selectedScreenItemProperty.addListener { o, old, new ->
+            println("selectedScreenItem index:${editViewModel.screenItems.indexOf(new)}")
             screenListView.selectionModel.select(new)
             editViewModel.selectorItems.clear()
             editViewModel.xmlFile = new?.xmlFile ?: ""
@@ -333,9 +348,9 @@ class EditController : Initializable {
             cellTextField.textProperty().bind(cellProperty)
             scrollHostTextField.textProperty().bind(scrollHostProperty)
         }
-        captureProgressIndicator.visibleProperty().bind(mainViewModel.disabledProperty)
+        captureProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
 
-        val list = NodeUtility.getAllNodes(editorTabPane)
+        val list = NodeUtility.getDescendants(editorTabPane)
         println(list)
     }
 
@@ -385,7 +400,10 @@ class EditController : Initializable {
                         baseItem = baseItem
                     )
                     if (r == null) {
-                        DialogHelper.showError("Can not set relative selector to the element.")
+                        DialogHelper.showError(
+                            "Can not set relative selector to the element.",
+                            content = relativeItem.testElement.toString()
+                        )
                         return@doAction
                     }
                     drawRectangleForBaseItem(baseItem)
@@ -398,20 +416,37 @@ class EditController : Initializable {
                 if (baseItem != null) {
                     drawRectangleForBaseItem(baseItem)
                     selectorsTableView.selectionModel.select(baseItem)
+                    selectTreeItemOf(baseItem.testElement)
                 } else {
                     val elm = editViewModel.getElementOnImage(e)
                     if (elm.isEmpty.not()) {
+                        /**
+                         * selectorTableView
+                         */
                         val nonWidgetItem = editViewModel.selectorItems
-                            .firstOrNull() { it.testElement.toString() == elm.toString() }
+                            .firstOrNull() { it.testElement == elm }
                             ?: elm.toSelectorItem(
                                 idPrefix = editViewModel.getIdPrefix(),
                                 screenItem = editViewModel.selectedScreenItem
                             )
                         drawRectangleForNonWidgetItem(nonWidgetItem)
                         selectorsTableView.selectionModel.select(nonWidgetItem)
+                        /**
+                         * elementsTreeView
+                         */
+                        selectTreeItemOf(elm)
                     }
                 }
             }
+            refresh()
+        }
+    }
+
+    private fun selectTreeItemOf(testElement: TestElement) {
+
+        val treeItem = editViewModel.getTreeItemOf(testElement = testElement)
+        if (treeItem != null) {
+            elementsTreeView.selectionModel.select(treeItem)
         }
     }
 
@@ -444,8 +479,8 @@ class EditController : Initializable {
                         val delete = {
                             undoManager.doAction(
                                 undoTargets = UndoTargets(editViewModel),
-                                undoAction = { mainViewModel.refresh() },
-                                redoAction = { mainViewModel.refresh() }
+                                undoAction = { screenBuilderViewModel.refresh() },
+                                redoAction = { screenBuilderViewModel.refresh() }
                             ) { data ->
                                 editViewModel.deleteScreenItem(item)
                             }
@@ -507,7 +542,31 @@ class EditController : Initializable {
             val item = new ?: return@addListener
             editViewModel.selectedSelectorItemProperty.set(item)
             clearRectangles()
-            drawRectangle(item)
+            drawRectangle(item.testElement)
+        }
+    }
+
+    private fun setupElementsTreeView() {
+
+        elementsTreeView.selectionModel.selectedItemProperty().addListener { _, _, new ->
+            val item = new ?: return@addListener
+            val testElement = item.value
+            clearRectangles()
+            drawRectangle(testElement)
+            editViewModel.refreshFields(testElement)
+            val selectorItem = editViewModel.getSelectorItemOf(testElement = testElement)
+            if (selectorItem != null) {
+                selectorsTableView.selectionModel.select(selectorItem)
+            }
+        }
+        elementsTreeView.setOnDragDetected { e ->
+            val selectorItem = elementsTreeView.selectionModel.selectedItem.value.toSelectorItem(
+                idPrefix = editViewModel.getIdPrefix(),
+                screenItem = editViewModel.selectedScreenItem
+            )
+            elementsTreeView.startDragAndDrop(TransferMode.COPY)
+                .pushObject(selectorItem)
+            e.consume()
         }
     }
 
@@ -515,12 +574,12 @@ class EditController : Initializable {
         nicknameTextField.textProperty().addListener { o, old, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.nickname = new
-            mainController.refresh()
+            screenBuilderController.refresh()
         }
         selectorExpressionTextField.textProperty().addListener { o, old, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.selectorExpression = new
-            mainController.refresh()
+            screenBuilderController.refresh()
         }
     }
 
@@ -573,7 +632,7 @@ class EditController : Initializable {
             }
         }
         editViewModel.loadXmlFromDirectory(xmlFile.toPath().parent.toString())
-        mainController.selectTab("Edit")
+        screenBuilderController.selectTab("Edit")
     }
 
     private fun setupButtonActions() {
@@ -581,10 +640,10 @@ class EditController : Initializable {
         captureButton.setOnAction {
             if (testDrive.driver.isReady.not()) {
                 DialogHelper.showInformation("Appium is not ready. Start Appium session.")
-                mainController.selectTab("Settings")
+                screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            mainViewModel.disable()
+            screenBuilderViewModel.disable()
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
@@ -595,19 +654,21 @@ class EditController : Initializable {
                         .replaceExtension(".xml").toString()
                     editViewModel.selectedScreenItem = editViewModel.getOrCreateScreenItem(xmlFile)
                     editViewModel.getSelectorItemsForWidgets()
+                    editViewModel
                 },
                 onProgressEnd = {
-                    mainViewModel.enable()
+                    screenBuilderViewModel.enable()
                 }
             )
         }
         captureWithScrollButton.setOnAction {
             if (testDrive.driver.isReady.not()) {
                 DialogHelper.showInformation("Appium is not ready. Start Appium session.")
-                mainController.selectTab("Settings")
+                screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            mainViewModel.disable()
+            screenBuilderViewModel.disable()
+            PropertiesManager.setPropertyValue("enableInnerCommandLog", "true")
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
@@ -625,7 +686,7 @@ class EditController : Initializable {
                 foregroundAction = {
                     editViewModel.loadXmlFromDirectory()
                 }, onProgressEnd = {
-                    mainViewModel.enable()
+                    screenBuilderViewModel.enable()
                 }
             )
         }
@@ -636,11 +697,11 @@ class EditController : Initializable {
             try {
                 loadXmlButtonAction()
             } catch (t: Throwable) {
-                DialogHelper.showError(t.message!!)
+                DialogHelper.showError(t.message ?: t.toString())
             }
         }
         previewJsonButton.setOnAction {
-            mainController.selectTab("Preview")
+            screenBuilderController.selectTab("Preview")
         }
         nextScreenButton.setOnAction {
             val item = editViewModel.nextScreenItem()
@@ -774,6 +835,8 @@ class EditController : Initializable {
         imageView.isPreserveRatio = true
         imagePane.children.add(imageView)
         resizeImage(width = imageScrollPane.width, height = imageScrollPane.height)
+
+        elementsTreeView.root = screenItem.rootTreeItem
     }
 
     fun clearRectangles() {
@@ -807,13 +870,13 @@ class EditController : Initializable {
         imagePane.children.add(rect)
     }
 
-    fun drawRectangle(item: SelectorItem) {
+    fun drawRectangle(testElement: TestElement) {
 
         val color =
-            if (item.testElement.isWidget) Const.WIDGET_COLOR
-            else if (item.testElement.selector?.isContainingRelative == true) Const.RELATIVE_COLOR
+            if (testElement.isWidget) Const.WIDGET_COLOR
+            else if (testElement.selector?.isContainingRelative == true) Const.RELATIVE_COLOR
             else Const.NON_WIDGET_COLOR
-        drawRectangle(item.testElement.bounds, color = color)
+        drawRectangle(testElement.bounds, color = color)
     }
 
     fun drawRectangleForBaseItem(baseItem: SelectorItem) {

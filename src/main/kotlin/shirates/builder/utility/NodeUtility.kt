@@ -7,7 +7,7 @@ import javafx.scene.control.TabPane
 
 object NodeUtility {
 
-    fun getAllNodes(node: Node, list: MutableList<Node> = mutableListOf()): MutableList<Node> {
+    fun getDescendants(node: Node, list: MutableList<Node> = mutableListOf()): MutableList<Node> {
 
         list.add(node)
 
@@ -20,7 +20,7 @@ object NodeUtility {
         }
 
         for (c in children) {
-            getAllNodes(c, list)
+            getDescendants(c, list)
         }
         return list
     }

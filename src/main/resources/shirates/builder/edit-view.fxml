@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -55,20 +56,6 @@
                     <GridPane.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                     </GridPane.margin>
-                </ScrollPane>
-                <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
-                    <GridPane.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                    </GridPane.margin>
-                    <content>
-                        <TableView fx:id="selectorsTableView">
-                            <columns>
-                                <TableColumn fx:id="nicknameColumn" prefWidth="250.0" text="Nickname" />
-                                <TableColumn fx:id="selectorExpressionColumn" prefWidth="358.0" text="Selector Expression" />
-                        <TableColumn fx:id="keyInfoColumn" prefWidth="18.0" text="I" />
-                            </columns>
-                        </TableView>
-                    </content>
                 </ScrollPane>
             <VBox GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
                <children>
@@ -392,6 +379,38 @@
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </GridPane.margin>
             </ProgressIndicator>
+            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
+              <tabs>
+                <Tab fx:id="nicknamesTab" text="Nicknames">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                                  <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="37.0" layoutY="120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                          <TableView fx:id="selectorsTableView">
+                                              <columns>
+                                                  <TableColumn fx:id="nicknameColumn" prefWidth="250.0" text="Nickname" />
+                                                  <TableColumn fx:id="selectorExpressionColumn" prefWidth="358.0" text="Selector Expression" />
+                                          <TableColumn fx:id="keyInfoColumn" prefWidth="18.0" text="I" />
+                                              </columns>
+                                          </TableView>
+                                 </content>
+                                  </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="elementsTab" text="Elements     ">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TreeView fx:id="elementsTreeView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
             </children>
         </GridPane>
     </children>

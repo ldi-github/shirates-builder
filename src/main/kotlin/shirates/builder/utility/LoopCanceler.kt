@@ -1,4 +1,4 @@
-package shirates.builder
+package shirates.builder.utility
 
 class LoopCanceler {
 

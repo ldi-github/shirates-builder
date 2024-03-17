@@ -4,7 +4,6 @@ import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
-import shirates.builder.utility.bindDisableAllUnder
 
 class BuilderApplication : Application() {
     override fun start(stage: Stage) {
@@ -15,12 +14,6 @@ class BuilderApplication : Application() {
         scene.stylesheets.addAll(
             this.javaClass.getResource("builder.css").toExternalForm()
         )
-
-        stage.sceneProperty().addListener { _, _, _ ->
-            val mainController = fxmlLoader.getController<shirates.builder.MainController>()
-            val mainViewModel = mainController.mainViewModel
-            mainViewModel.disabledProperty.bindDisableAllUnder(mainController.rootNode)
-        }
 
         stage.title = "Shirates Builder"
         stage.scene = scene

@@ -1,6 +1,9 @@
 package shirates.builder
 
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.TreeItem
+import shirates.builder.utility.TreeItemUtility.getDescendantAndSelf
+import shirates.core.driver.TestElement
 import shirates.core.utility.toPath
 import kotlin.io.path.nameWithoutExtension
 
@@ -19,6 +22,10 @@ class ScreenItem(
         }
     val selectorItems = mutableListOf<SelectorItem>()
 
+    var rootElement = TestElement.emptyElement
+
+    var rootTreeItem = TreeItem<TestElement>()
+
     val fileNoProperty = SimpleStringProperty()
     val fileNo: String
         get() {
@@ -35,4 +42,9 @@ class ScreenItem(
         this.xmlFile = xmlFile
     }
 
+    fun getTreeItemOf(testElement: TestElement): TreeItem<TestElement>? {
+
+        val items = rootTreeItem.getDescendantAndSelf()
+        return items.firstOrNull() { it.value.toString() == testElement.toString() }
+    }
 }
