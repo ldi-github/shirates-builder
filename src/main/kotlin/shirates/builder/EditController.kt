@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle
 import javafx.util.Callback
 import shirates.builder.utility.DialogHelper
 import shirates.builder.utility.NodeUtility
+import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.draganddrop.pushObject
 import shirates.builder.utility.runAsync
@@ -348,6 +349,13 @@ class EditController : Initializable {
             cellTextField.textProperty().bind(cellProperty)
             scrollHostTextField.textProperty().bind(scrollHostProperty)
         }
+        screenBuilderViewModel.disabledProperty.bindDisable(
+            xmlFileTextField, xmlFileButton, loadXmlButton, previewJsonButton,
+            captureButton, previousScreenButton, nextScreenButton,
+            captureWithScrollButton, downRadioButton, rightRadioButton, leftRadioButton, upRadioButton,
+            upSelectorItemButton, downSelectorItemButton, commentButton,
+            nicknameTextField, selectorExpressionTextField
+        )
         captureProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
 
         val list = NodeUtility.getDescendants(editorTabPane)
