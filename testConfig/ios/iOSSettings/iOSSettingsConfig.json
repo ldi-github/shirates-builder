@@ -1,0 +1,37 @@
+{
+  "testConfigName": "iOSSettingsConfig",
+
+  "appIconName": "Settings",
+
+  "packageOrBundleId": "com.apple.Preferences",
+
+  "startupPackageOrBundleId": "com.apple.Preferences",
+
+  "capabilities": {
+    "useJSONSource": true,
+    "appium:showXcodeLog": true,
+    "bundleId": "com.apple.Preferences",
+    "language": "en",
+    "locale": "US"
+  },
+
+  "profiles": [
+    {
+      "profileName": "iOS *",
+      "capabilities": {
+      }
+    },
+    {
+      "profileName": "iOS 17.2",
+      "capabilities": {
+        "platformVersion": "17.2"
+      }
+    },
+    {
+      "profileName": "iOS device1",
+      "capabilities": {
+        "udid": "50AC15AE-078B-4022-BB1B-7A541B7D47B4"
+      }
+    }
+  ]
+}

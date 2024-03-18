@@ -110,14 +110,14 @@ class SettingsViewModel(
             }
         }
         screenBuilderViewModel.editViewModel.xmlFile = ""
-        TestLog.info("Click to capture screen.")
+        TestLog.info("Click [Capture] button in Screen Builder to capture screen.")
     }
 
     fun setupConfig() {
 
         System.setProperty(UserVar.SHIRATES_PROJECT_DIR, projectDirectory)
         PropertiesManager.setup(testrunFile = testrunFile)
-        PropertiesManager.setPropertyValue("screenshotScale","1.0")
+        PropertiesManager.setPropertyValue("screenshotScale", "1.0")
         if (androidSelectedProperty.value) {
             PropertiesManager.properties.set("os", "android")
         } else {

@@ -15,15 +15,31 @@ class MainController : Initializable {
 
     var screenBuilderStage: Stage? = null
 
+    var templateCodeGeneratorStage: Stage? = null
+
     @FXML
     lateinit var screenBuilderButton: Button
 
+    @FXML
+    lateinit var templateCodeGeneratorButton: Button
 
     override fun initialize(url: URL?, resourceBundle: ResourceBundle?) {
 
         screenBuilderButton.setOnAction {
             openScreenBuilder()
         }
+        templateCodeGeneratorButton.setOnAction {
+            openTemplateCodeGenerator()
+        }
+    }
+
+    private fun createStage(fxml: String): Stage {
+        val fxmlLoader = FXMLLoader(BuilderApplication::class.java.getResource(fxml))
+        val node = fxmlLoader.load<Node>()
+        val scene = Scene(node as Parent)
+        val stage = Stage()
+        stage.scene = scene
+        return stage
     }
 
     fun openScreenBuilder() {
@@ -33,15 +49,26 @@ class MainController : Initializable {
             return
         }
 
-        val fxmlLoader = FXMLLoader(BuilderApplication::class.java.getResource("screen-builder-view.fxml"))
-        val node = fxmlLoader.load<Node>()
-        val scene = Scene(node as Parent)
-        val stage = Stage()
-        stage.scene = scene
-        stage.show()
-        stage.setOnCloseRequest {
+        screenBuilderStage = createStage("screen-builder-view.fxml")
+        screenBuilderStage!!.title = "Screen Builder"
+        screenBuilderStage!!.show()
+        screenBuilderStage!!.setOnCloseRequest {
             screenBuilderStage = null
         }
-        screenBuilderStage = stage
+    }
+
+    fun openTemplateCodeGenerator() {
+
+        if (templateCodeGeneratorStage != null) {
+            templateCodeGeneratorStage!!.show()
+            return
+        }
+
+        templateCodeGeneratorStage = createStage("template-code-generator-view.fxml")
+        templateCodeGeneratorStage!!.title = "Template Code Generator"
+        templateCodeGeneratorStage!!.show()
+        templateCodeGeneratorStage!!.setOnCloseRequest {
+            templateCodeGeneratorStage = null
+        }
     }
 }
