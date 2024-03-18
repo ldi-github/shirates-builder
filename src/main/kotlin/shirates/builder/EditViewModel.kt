@@ -323,6 +323,7 @@ class EditViewModel(
         }
 
         TestElementCache.rootElement = screenItem.rootElement
+        TestElementCache.synced = true
 
         if (screenItem.selectorItems.isEmpty()) {
             val items = getSelectorItemsForWidgets()

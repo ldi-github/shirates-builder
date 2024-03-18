@@ -60,6 +60,7 @@ class SettingsViewModel(
 
         // testContext
         val testContext = TestContext(profile = profile)
+        testContext.enableIrregularHandler = false
 
         // CustomFunctionRepository
         CustomFunctionRepository.initialize()
