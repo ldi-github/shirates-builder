@@ -282,7 +282,6 @@ class EditController : Initializable {
     private fun setupViewModelListeners() {
 
         editViewModel.selectedScreenItemProperty.addListener { o, old, new ->
-            println("selectedScreenItem index:${editViewModel.screenItems.indexOf(new)}")
             screenListView.selectionModel.select(new)
             editViewModel.selectorItems.clear()
             editViewModel.xmlFile = new?.xmlFile ?: ""
