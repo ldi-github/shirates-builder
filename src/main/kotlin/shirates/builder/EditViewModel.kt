@@ -233,6 +233,7 @@ class EditViewModel(
             selectedScreenItem = screenItem
         }
         selectedScreenItem = screenItems.firstOrNull()
+        TestElementCache.synced = true
     }
 
     fun refreshKeyInfo() {

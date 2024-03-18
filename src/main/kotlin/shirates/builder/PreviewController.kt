@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.scene.layout.AnchorPane
 import shirates.builder.utility.DialogHelper
+import shirates.builder.utility.bindDisable
 import shirates.core.utility.toPath
 import java.awt.Desktop
 import java.net.URL
@@ -66,6 +67,10 @@ class PreviewController : Initializable {
         keyTextField.textProperty().bindBidirectional(previewViewModel.keyProperty)
         nicknameFileTextField.textProperty().bind(previewViewModel.nicknameFileProperty)
         previewJsonTextArea.textProperty().bind(previewViewModel.previewJsonProperty)
+
+        screenBuilderViewModel.disabledProperty.bindDisable(
+            keyTextField, openDirectoryButton, saveNicknameFileButton
+        )
     }
 
     private fun setupButtonActions() {
