@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent
 import shirates.builder.utility.TestElementRelativeUtility
 import shirates.builder.utility.undo.Undoable
 import shirates.core.driver.*
+import shirates.core.driver.TestMode.isiOS
 import shirates.core.driver.commandextension.findElements
 import shirates.core.driver.commandextension.getCell
 import shirates.core.driver.commandextension.helper.CellFlowContainer
@@ -397,9 +398,12 @@ class EditViewModel(
         val x = (e.x / ratio).toInt()
         val y = (e.y / ratio).toInt()
         val bounds = Bounds(left = x, top = y, width = 1, height = 1)
-        val elements = selectedScreenItem!!.rootElement.descendantsAndSelf
+        var elements = selectedScreenItem!!.rootElement.descendantsAndSelf
             .filter { bounds.isIncludedIn(it.bounds) && it.isEmpty.not() }
             .reversed()
+        if (isiOS) {
+            elements = elements.filter { it.visible == "true" }
+        }
         return elements
     }
 

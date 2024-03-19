@@ -1,0 +1,78 @@
+{
+  "key": "[iOS Settings Screen]",
+
+  "identity": "[account]",
+
+  "satellites": [
+    "[Sign in to your iPhone]",
+    "[Accessibility]",
+    "[Health]",
+    "[Developer]"
+  ],
+
+  "selectors": {
+
+    "[Settings]": "",
+
+    "[account]": "account",
+    "[Sign in to your iPhone]": "",
+    "[Set up iCloud, the App Store, and more.]": "",
+
+    "[VPN]": "",
+    "[VPN switch]": "[VPN]:rightSwitch",
+
+    "[Screen Time image]": "[Screen Time]:leftImage",
+    "[Screen Time]": "",
+    "#[chevron]": "chevron",
+
+    "[General image]": "[General]:leftImage",
+    "[General]": "",
+
+    "[Accessibility image]": "[Accessibility]:leftImage",
+    "[Accessibility]": "",
+
+    "[Privacy & Security image]": "[Privacy & Security]:leftImage",
+    "[Privacy & Security]": "",
+
+    "[Passwords image]": "[Passwords]:leftImage",
+    "[Passwords]": "",
+
+    "[Safari image]": "[Safari]:leftImage",
+    "[Safari]": "",
+
+    "[News image]": "[News]:leftImage",
+    "[News]": "",
+
+    "[Translate image]": "[Translate]:leftImage",
+    "[Translate]": "",
+
+    "[Maps image]": "[Maps]:leftImage",
+    "[Maps]": "",
+
+    "[Shortcuts image]": "[Shortcuts]:leftImage",
+    "[Shortcuts]": "",
+
+    "[Health image]": "[Health]:leftImage",
+    "[Health]": "",
+
+    "[Siri & Search image]": "[Siri & Search]:leftImage",
+    "[Siri & Search]": "",
+
+    "[Photos image]": "[Photos]:leftImage",
+    "[Photos]": "",
+
+    "[Game Center image]": "[Game Center]:leftImage",
+    "[Game Center]": "",
+
+    "[Developer image]": "[Developer]:leftImage",
+    "[Developer]": ""
+  },
+
+  "scroll": {
+    "header-elements": "",
+    "footer-elements": "",
+    "overlay-elements": "",
+    "start-elements": "",
+    "end-elements": ""
+  }
+}

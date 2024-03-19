@@ -7,6 +7,7 @@ import shirates.core.driver.TestElementCache
 import shirates.core.driver.commandextension.helper.HorizontalBand
 import shirates.core.driver.commandextension.helper.VerticalBand
 import shirates.core.logging.Message.message
+import shirates.core.logging.TestLog
 import shirates.core.utility.element.ElementCategory
 import shirates.core.utility.element.ElementCategoryExpressionUtility
 import shirates.spec.utilily.removeBrackets
@@ -100,7 +101,6 @@ object TestElementRelativeUtility {
 
         val c = ElementCategoryExpressionUtility.getCategory(thisItem.testElement)
         var suffix = ""
-        ElementCategory.LABEL
         if (c == ElementCategory.INPUT ||
             c == ElementCategory.IMAGE ||
             c == ElementCategory.BUTTON ||
@@ -114,7 +114,11 @@ object TestElementRelativeUtility {
             return "{$nicknameTitle}"
         }
         if (suffix.isNotBlank()) {
-            nicknameTitle = nicknameTitle + suffix
+            if (TestLog.logLanguage == "ja") {
+                nicknameTitle = "${nicknameTitle}${suffix}"
+            } else {
+                nicknameTitle = "${nicknameTitle} ${suffix}"
+            }
             return "[$nicknameTitle]"
         } else {
             return "{$nicknameTitle}"
