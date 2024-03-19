@@ -68,7 +68,7 @@
                                 <Insets bottom="8.0" left="8.0" right="8.0" />
                             </padding>
                         </HBox>
-                        <Label fx:id="promptLabel" style="-fx-text-fill: blue;" text="Drag nickname here to add it">
+                        <Label fx:id="promptLabel" style="-fx-text-fill: blue;" text="Drag nickname here to add">
                             <padding>
                                 <Insets bottom="8.0" left="16.0" right="8.0" top="16.0" />
                             </padding>

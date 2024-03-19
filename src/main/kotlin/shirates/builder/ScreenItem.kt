@@ -45,6 +45,6 @@ class ScreenItem(
     fun getTreeItemOf(testElement: TestElement): TreeItem<TestElement>? {
 
         val items = rootTreeItem.getDescendantAndSelf()
-        return items.firstOrNull() { it.value.toString() == testElement.toString() }
+        return items.firstOrNull() { it.value == testElement }
     }
 }

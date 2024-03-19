@@ -170,7 +170,7 @@ class PreviewViewModel(
                 else s.selectorExpression
             sb.appendLine("    \"${s.nickname}\": \"$exp\"$comma")
         }
-        sb.appendLine("  }")
+        sb.appendLine("  },")
         sb.appendLine()
 
         sb.appendLine("  \"scroll\": {")

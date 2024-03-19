@@ -199,8 +199,6 @@ class EditController : Initializable {
 
     val undoManager = UndoManager()
 
-    var rootTreeItem = TreeItem<TestElement>(TestElement.emptyElement)
-
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
 
     }
@@ -281,21 +279,21 @@ class EditController : Initializable {
 
     private fun setupViewModelListeners() {
 
-        editViewModel.selectedScreenItemProperty.addListener { o, old, new ->
+        editViewModel.selectedScreenItemProperty.addListener { _, _, new ->
             screenListView.selectionModel.select(new)
             editViewModel.selectorItems.clear()
             editViewModel.xmlFile = new?.xmlFile ?: ""
             changeToSelectedScreen()
         }
-        editViewModel.selectedSelectorItemProperty.addListener { o, old, new ->
+        editViewModel.selectedSelectorItemProperty.addListener { _, _, new ->
             editViewModel.selectedNicknameProperty.set(new?.nickname ?: "")
             editViewModel.selectedSelectorExpressionProperty.set(new?.selectorExpression ?: "")
             selectorsTableView.selectionModel.select(new)
         }
-        editViewModel.selectedIdentityItemProperty.addListener { o, old, new ->
+        editViewModel.selectedIdentityItemProperty.addListener { _, _, new ->
 
         }
-        editViewModel.selectedSelectorExpressionProperty.addListener { o, old, new ->
+        editViewModel.selectedSelectorExpressionProperty.addListener { _, _, new ->
             val exp = new ?: ""
             if (exp.contains(">:") || exp.contains("}:") || exp.contains("]:")) {
                 val style = "-fx-text-inner-color: darkgreen; -fx-background-color: honeydew; -fx-border-color: gray"
@@ -363,11 +361,11 @@ class EditController : Initializable {
 
     private fun setupImageScrollPane() {
 
-        imageScrollPane.widthProperty().addListener { o, old, new ->
+        imageScrollPane.widthProperty().addListener { _, _, new ->
             val newWidth = new?.toDouble() ?: return@addListener
             resizeImage(width = newWidth)
         }
-        imageScrollPane.heightProperty().addListener { o, old, new ->
+        imageScrollPane.heightProperty().addListener { _, _, new ->
             val newHeight = new?.toDouble() ?: return@addListener
             resizeImage(height = newHeight)
         }
@@ -393,15 +391,15 @@ class EditController : Initializable {
 
                 undoManager.doAction(
                     description = "Set relative selector",
-                    undoAction = { data ->
+                    undoAction = { _ ->
                         clearRectangles()
                     },
-                    redoAction = { data ->
+                    redoAction = { _ ->
                         clearRectangles()
                     },
                     undoTargets = UndoTargets(relativeItem)
                 )
-                { data ->
+                { _ ->
                     val r = editViewModel.setRelativeSelectorFromBaseElement(
                         relativeItem = relativeItem,
                         baseItem = baseItem
@@ -479,9 +477,9 @@ class EditController : Initializable {
                         vbox.children.addAll(imageView, label)
                         graphic = vbox
 
-                        val deletemenu = MenuItem()
-                        deletemenu.text = "Delete"
-                        contextMenu = ContextMenu(deletemenu)
+                        val deleteMenu = MenuItem()
+                        deleteMenu.text = "Delete"
+                        contextMenu = ContextMenu(deleteMenu)
 
                         val delete = {
                             undoManager.doAction(
@@ -498,14 +496,14 @@ class EditController : Initializable {
                                 delete()
                             }
                         }
-                        deletemenu.setOnAction { e ->
+                        deleteMenu.setOnAction { e ->
                             delete()
                         }
                     }
                 }
             }
         }
-        screenListView.selectionModel.selectedItemProperty().addListener { o, old, new ->
+        screenListView.selectionModel.selectedItemProperty().addListener { _, _, new ->
             val item = new ?: return@addListener
             editViewModel.selectedScreenItem = item
             changeToSelectedScreen()
@@ -545,7 +543,7 @@ class EditController : Initializable {
             }
         }
         selectorsTableView.selectionModel.selectionMode = SelectionMode.SINGLE
-        selectorsTableView.selectionModel.selectedItemProperty().addListener { o, old, new ->
+        selectorsTableView.selectionModel.selectedItemProperty().addListener { _, _, new ->
             val item = new ?: return@addListener
             editViewModel.selectedSelectorItemProperty.set(item)
             clearRectangles()
@@ -578,12 +576,12 @@ class EditController : Initializable {
     }
 
     private fun setupTextFieldListeners() {
-        nicknameTextField.textProperty().addListener { o, old, new ->
+        nicknameTextField.textProperty().addListener { _, _, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.nickname = new
             screenBuilderController.refresh()
         }
-        selectorExpressionTextField.textProperty().addListener { o, old, new ->
+        selectorExpressionTextField.textProperty().addListener { _, _, new ->
             val item = editViewModel.selectedSelectorItem ?: return@addListener
             item.selectorExpression = new
             screenBuilderController.refresh()
@@ -725,7 +723,7 @@ class EditController : Initializable {
 
             undoManager.doAction(
                 undoTargets = UndoTargets(editViewModel)
-            ) { data ->
+            ) { _ ->
                 val ix = editViewModel.selectorItems.indexOf(item)
                 if (ix < 1) {
                     return@doAction
@@ -741,7 +739,7 @@ class EditController : Initializable {
 
             undoManager.doAction(
                 undoTargets = UndoTargets(editViewModel)
-            ) { data ->
+            ) { _ ->
                 val ix = editViewModel.selectorItems.indexOf(item)
                 if (ix > editViewModel.selectorItems.count() - 2) {
                     return@doAction
@@ -757,7 +755,7 @@ class EditController : Initializable {
 
             undoManager.doAction(
                 undoTargets = UndoTargets(editViewModel, item)
-            ) { data ->
+            ) { _ ->
                 if (item.nickname.startsWith("#")) {
                     item.nickname = item.nickname.substring(1)
                 } else {
@@ -772,6 +770,17 @@ class EditController : Initializable {
 
         commentButton.setOnAction {
             val item = editViewModel.selectedSelectorItem ?: return@setOnAction
+            val items = editViewModel.selectorItems.filter { it.nickname == item.nickname }
+            val count = items.count()
+            if (count >= 2) {
+                val r = DialogHelper.showOkCancel("Do you comment all ${item.nickname}? ($count)")
+                if (r == ButtonType.OK) {
+                    for (i in items) {
+                        comment(i)
+                    }
+                    return@setOnAction
+                }
+            }
             comment(item)
         }
 
@@ -932,16 +941,16 @@ class EditController : Initializable {
                 }
             }
         }
-        if (list.count() == 0) {
-            showIdentityMesssage("Identity is valid", Alert.AlertType.INFORMATION)
+        if (list.isEmpty()) {
+            showIdentityMessage("Identity is valid", Alert.AlertType.INFORMATION)
         } else if (list.count() >= 1) {
-            showIdentityMesssage("Identity is not unique.", Alert.AlertType.ERROR)
+            showIdentityMessage("Identity is not unique.", Alert.AlertType.ERROR)
         } else {
             throw IllegalStateException("Something wrong")
         }
     }
 
-    fun showIdentityMesssage(message: String, alertType: Alert.AlertType = Alert.AlertType.INFORMATION) {
+    fun showIdentityMessage(message: String, alertType: Alert.AlertType = Alert.AlertType.INFORMATION) {
 
         identityMessageLabel.text = message
         identityMessageLabel.textFill = when (alertType) {
