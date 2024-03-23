@@ -27,7 +27,7 @@ fun runAsync(
                 if (onError != null) {
                     onError(t)
                 } else {
-                    DialogHelper.showError(t.message!!, t.toString())
+                    DialogHelper.showError(t.message ?: "", t.toString())
                     throw t
                 }
             }
@@ -43,7 +43,7 @@ fun runAsync(
                 if (onError != null) {
                     onError(t)
                 } else {
-                    DialogHelper.showError(t.message!!, t.toString())
+                    DialogHelper.showError(t.message ?: "", t.toString())
                     throw t
                 }
             } finally {

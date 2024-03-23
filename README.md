@@ -1,6 +1,6 @@
 # shirates-builder
 
-Builder tools for shirates
+Builder tools for [Shirates](https://github.com/ldi-github/shirates-core)
 
 ![](https://ldi-github.github.io/shirates-core/in_action/creating_screen_nickname_file/_images/screen_builder_overview_edit.png)
 

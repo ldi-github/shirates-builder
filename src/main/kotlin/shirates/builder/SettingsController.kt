@@ -2,10 +2,7 @@ package shirates.builder
 
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Button
-import javafx.scene.control.ProgressIndicator
-import javafx.scene.control.RadioButton
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
@@ -49,10 +46,43 @@ class SettingsController : Initializable {
     lateinit var testrunFileButton: Button
 
     @FXML
+    lateinit var loadTestrunFileButton: Button
+
+    @FXML
     lateinit var androidRadioButton: RadioButton
 
     @FXML
+    lateinit var androidVersionTextField: TextField
+
+    @FXML
     lateinit var iosRadioButton: RadioButton
+
+    @FXML
+    lateinit var iosVersionTextField: TextField
+
+    @FXML
+    lateinit var appPackageFileTextField: TextField
+
+    @FXML
+    lateinit var packageOrBundleIdTextField: TextField
+
+    @FXML
+    lateinit var startupPackageOrBundleIdTextField: TextField
+
+    @FXML
+    lateinit var startupActivityLabel: Label
+
+    @FXML
+    lateinit var startupActivityTextField: TextField
+
+    @FXML
+    lateinit var languageTextField: TextField
+
+    @FXML
+    lateinit var localeTextField: TextField
+
+    @FXML
+    lateinit var udidTextField: TextField
 
     @FXML
     lateinit var startButton: Button
@@ -95,18 +125,41 @@ class SettingsController : Initializable {
 
     private fun setupBinding() {
 
-        projectDirectoryTextField.textProperty().bindBidirectional(settingsViewModel.projectDirectoryProperty)
-        testrunFileTextField.textProperty().bindBidirectional(settingsViewModel.testrunFileProperty)
-        androidRadioButton.selectedProperty().bindBidirectional(settingsViewModel.androidSelectedProperty)
-        iosRadioButton.selectedProperty().bindBidirectional(settingsViewModel.iosSelectedProperty)
+        with(settingsViewModel) {
+            projectDirectoryTextField.textProperty().bindBidirectional(projectDirectoryProperty)
+            testrunFileTextField.textProperty().bindBidirectional(testrunFileProperty)
+            androidRadioButton.selectedProperty().bindBidirectional(androidSelectedProperty)
+            androidVersionTextField.textProperty().bindBidirectional(androidVersionProperty)
+            iosRadioButton.selectedProperty().bindBidirectional(iosSelectedProperty)
+            iosVersionTextField.textProperty().bindBidirectional(iosVersionProperty)
+
+            appPackageFileTextField.textProperty().bindBidirectional(appPackageFileProperty)
+            packageOrBundleIdTextField.textProperty().bindBidirectional(packageOrBundleIdProperty)
+            startupPackageOrBundleIdTextField.textProperty().bindBidirectional(startupPackageOrBundleIdProperty)
+            startupActivityTextField.textProperty().bindBidirectional(startupActivityProperty)
+            languageTextField.textProperty().bindBidirectional(languageProperty)
+            localeTextField.textProperty().bindBidirectional(localeProperty)
+            udidTextField.textProperty().bindBidirectional(udidProperty)
+        }
+
         xmlFileTextField.textProperty().bindBidirectional(screenBuilderViewModel.editViewModel.xmlFileProperty)
 
         screenBuilderViewModel.disabledProperty.bindDisable(
-            testrunFileTextField, testrunFileButton,
-            androidRadioButton, iosRadioButton, startButton,
+            testrunFileTextField, testrunFileButton, loadTestrunFileButton,
+            androidRadioButton, androidVersionTextField,
+            iosRadioButton, iosVersionTextField,
+            appPackageFileTextField,
+            packageOrBundleIdTextField, startupPackageOrBundleIdTextField, startupActivityTextField,
+            languageTextField, localeTextField, udidTextField,
+            startButton,
             loadXmlButton, xmlFileTextField, xmlFileButton
         )
         sessionProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
+
+        androidVersionTextField.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
+        iosVersionTextField.visibleProperty().bind(settingsViewModel.iosSelectedProperty)
+        startupActivityLabel.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
+        startupActivityTextField.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
     }
 
     private fun setupDragAndDrop() {
@@ -152,6 +205,12 @@ class SettingsController : Initializable {
                 settingsViewModel.testrunFileProperty.set(file.path)
             }
         }
+        loadTestrunFileButton.setOnAction {
+            if (validateTestrunFile().not()) {
+                return@setOnAction
+            }
+            settingsViewModel.loadFromTestrunFile()
+        }
         startButton.setOnAction {
             if (validateTestrunFile().not()) {
                 return@setOnAction
@@ -191,6 +250,10 @@ class SettingsController : Initializable {
         }
         if (testrunFile.toPath().exists().not()) {
             DialogHelper.showError("File not found.", testrunFile)
+            return false
+        }
+        if (testrunFile.endsWith("testrun.properties").not()) {
+            DialogHelper.showError("This is not testrun.properties file.", testrunFile)
             return false
         }
         return true

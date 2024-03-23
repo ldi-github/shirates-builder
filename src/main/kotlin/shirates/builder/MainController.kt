@@ -44,11 +44,6 @@ class MainController : Initializable {
 
     fun openScreenBuilder() {
 
-        if (screenBuilderStage != null) {
-            screenBuilderStage!!.show()
-            return
-        }
-
         screenBuilderStage = createStage("screen-builder-view.fxml")
         screenBuilderStage!!.title = "Screen Builder"
         screenBuilderStage!!.show()

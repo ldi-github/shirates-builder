@@ -16,7 +16,6 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.util.Callback
 import shirates.builder.utility.DialogHelper
-import shirates.builder.utility.NodeUtility
 import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.draganddrop.pushObject
@@ -354,9 +353,6 @@ class EditController : Initializable {
             nicknameTextField, selectorExpressionTextField
         )
         captureProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
-
-        val list = NodeUtility.getDescendants(editorTabPane)
-        println(list)
     }
 
     private fun setupImageScrollPane() {

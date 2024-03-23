@@ -42,12 +42,13 @@ class ScreenBuilderController : Initializable {
         setupPreviewView()
 
         setupObjectListener()
+
+        screenBuilderViewModel.loadPreferences()
     }
 
     private fun setupViewModel() {
 
         screenBuilderViewModel = ScreenBuilderViewModel()
-        screenBuilderViewModel.loadPreferences()
     }
 
     private fun setupSettingsView() {

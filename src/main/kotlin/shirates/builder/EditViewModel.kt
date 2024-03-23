@@ -227,7 +227,7 @@ class EditViewModel(
             throw IllegalArgumentException("No xml file found in ${directory}.")
         }
 
-        screenBuilderViewModel.settingsViewModel.setupConfig()
+        screenBuilderViewModel.settingsViewModel.setupProfile()
 
         for (f in files) {
             val screenItem = getOrCreateScreenItem(f.toString())
