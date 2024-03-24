@@ -39,7 +39,6 @@ class TextFieldWatcher(
                     }
                     isEditing = true
                     startText = textField.text
-                    println("startText:\"$startText\"")
                     val targets = UndoTargets(editingItem!!).merge(undoTargets)
                     tempRecord = UndoableRecord(undoTargets = targets)
                     tempRecord!!.captureForUndo()
@@ -50,7 +49,6 @@ class TextFieldWatcher(
                     isEditing = false
                     endText = textField.text
                 }
-                println("startText:\"$startText\", endText:\"$endText\"")
                 if (startText != endText) {
                     committedText = endText
                     if (tempRecord != null) {

@@ -7,31 +7,11 @@
   "startupPackageOrBundleId": "com.android.settings",
   "startupActivity": "com.android.settings.Settings",
 
-  "settings": {
-    "always_finish_activities": "0"
-  },
-
   "capabilities": {
     "language": "en",
     "locale": "US"
   },
 
   "profiles": [
-    {
-      "profileName": "Android 12",
-      "capabilities": {
-      }
-    },
-    {
-      "profileName": "Android 13",
-      "capabilities": {
-      }
-    },
-    {
-      "profileName": "emulator-5556",
-      "capabilities": {
-        "udid": "emulator-5556"
-      }
-    }
   ]
 }

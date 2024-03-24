@@ -2,15 +2,13 @@ package shirates.builder
 
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Button
-import javafx.scene.control.ProgressIndicator
-import javafx.scene.control.RadioButton
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import kotlinx.coroutines.DelicateCoroutinesApi
 import shirates.builder.utility.DialogHelper
+import shirates.builder.utility.UrlUtility
 import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.runAsync
@@ -49,28 +47,46 @@ class SettingsController : Initializable {
     lateinit var testrunFileButton: Button
 
     @FXML
+    lateinit var loadTestrunFileButton: Button
+
+    @FXML
     lateinit var androidRadioButton: RadioButton
 
     @FXML
+    lateinit var androidVersionTextField: TextField
+
+    @FXML
     lateinit var iosRadioButton: RadioButton
+
+    @FXML
+    lateinit var iosVersionTextField: TextField
+
+    @FXML
+    lateinit var profileNameTextField: TextField
+
+    @FXML
+    lateinit var seeDetailHyperlink: Hyperlink
+
+    @FXML
+    lateinit var appPackageFileTextField: TextField
+
+    @FXML
+    lateinit var packageOrBundleIdTextField: TextField
+
+    @FXML
+    lateinit var startupActivityTextField: TextField
+
+    @FXML
+    lateinit var languageTextField: TextField
+
+    @FXML
+    lateinit var localeTextField: TextField
 
     @FXML
     lateinit var startButton: Button
 
     @FXML
     lateinit var sessionProgressIndicator: ProgressIndicator
-
-    @FXML
-    lateinit var loadXmlButton: Button
-
-    @FXML
-    lateinit var xmlfileHBox: HBox
-
-    @FXML
-    lateinit var xmlFileTextField: TextField
-
-    @FXML
-    lateinit var xmlFileButton: Button
 
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
@@ -95,18 +111,35 @@ class SettingsController : Initializable {
 
     private fun setupBinding() {
 
-        projectDirectoryTextField.textProperty().bindBidirectional(settingsViewModel.projectDirectoryProperty)
-        testrunFileTextField.textProperty().bindBidirectional(settingsViewModel.testrunFileProperty)
-        androidRadioButton.selectedProperty().bindBidirectional(settingsViewModel.androidSelectedProperty)
-        iosRadioButton.selectedProperty().bindBidirectional(settingsViewModel.iosSelectedProperty)
-        xmlFileTextField.textProperty().bindBidirectional(screenBuilderViewModel.editViewModel.xmlFileProperty)
+        with(settingsViewModel) {
+            projectDirectoryTextField.textProperty().bindBidirectional(projectDirectoryProperty)
+            testrunFileTextField.textProperty().bindBidirectional(testrunFileProperty)
+            androidRadioButton.selectedProperty().bindBidirectional(androidSelectedProperty)
+            androidVersionTextField.textProperty().bindBidirectional(androidVersionProperty)
+            iosRadioButton.selectedProperty().bindBidirectional(iosSelectedProperty)
+            iosVersionTextField.textProperty().bindBidirectional(iosVersionProperty)
+
+            profileNameTextField.textProperty().bindBidirectional(profileNameProperty)
+            appPackageFileTextField.textProperty().bindBidirectional(appPackageFileProperty)
+            packageOrBundleIdTextField.textProperty().bindBidirectional(packageOrBundleIdProperty)
+            languageTextField.textProperty().bindBidirectional(languageProperty)
+            localeTextField.textProperty().bindBidirectional(localeProperty)
+        }
 
         screenBuilderViewModel.disabledProperty.bindDisable(
-            testrunFileTextField, testrunFileButton,
-            androidRadioButton, iosRadioButton, startButton,
-            loadXmlButton, xmlFileTextField, xmlFileButton
+            testrunFileTextField, testrunFileButton, loadTestrunFileButton,
+            androidRadioButton, androidVersionTextField,
+            iosRadioButton, iosVersionTextField,
+            profileNameTextField,
+            appPackageFileTextField,
+            packageOrBundleIdTextField,
+            languageTextField, localeTextField,
+            startButton,
         )
         sessionProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
+
+        androidVersionTextField.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
+        iosVersionTextField.visibleProperty().bind(settingsViewModel.iosSelectedProperty)
     }
 
     private fun setupDragAndDrop() {
@@ -124,19 +157,6 @@ class SettingsController : Initializable {
             e.isDropCompleted = true
             e.consume()
         }
-        xmlfileHBox.setOnDragOver { e ->
-            e.acceptLink()
-            e.consume()
-        }
-        xmlfileHBox.setOnDragDropped { e ->
-            val dragboard = e.dragboard
-            if (dragboard.hasFiles()) {
-                val file = dragboard.files.first()
-                screenBuilderViewModel.editViewModel.xmlFileProperty.set(file.path)
-            }
-            e.isDropCompleted = true
-            e.consume()
-        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -150,6 +170,19 @@ class SettingsController : Initializable {
             val file = DialogHelper.openFileDialog(initialDirectory = initDir, extensions = "properties")
             if (file != null) {
                 settingsViewModel.testrunFileProperty.set(file.path)
+            }
+        }
+        loadTestrunFileButton.setOnAction {
+            if (validateTestrunFile().not()) {
+                return@setOnAction
+            }
+            settingsViewModel.loadFromTestrunFile()
+        }
+        seeDetailHyperlink.setOnAction {
+            if (settingsViewModel.language == "ja") {
+                UrlUtility.openWebPage("https://ldi-github.github.io/shirates-core/basic/parameter/automatic_device_detection_ja.html")
+            } else {
+                UrlUtility.openWebPage("https://ldi-github.github.io/shirates-core/basic/parameter/automatic_device_detection.html")
             }
         }
         startButton.setOnAction {
@@ -171,15 +204,6 @@ class SettingsController : Initializable {
                 screenBuilderController.selectTab("Edit")
             }
         }
-        xmlFileButton.setOnAction {
-            if (validateTestrunFile().not()) {
-                return@setOnAction
-            }
-            screenBuilderController.editController.xmlFileButtonAction()
-        }
-        loadXmlButton.setOnAction {
-            screenBuilderController.editController.loadXmlButtonAction()
-        }
     }
 
     fun validateTestrunFile(): Boolean {
@@ -191,6 +215,10 @@ class SettingsController : Initializable {
         }
         if (testrunFile.toPath().exists().not()) {
             DialogHelper.showError("File not found.", testrunFile)
+            return false
+        }
+        if (testrunFile.endsWith("testrun.properties").not()) {
+            DialogHelper.showError("This is not testrun.properties file.", testrunFile)
             return false
         }
         return true

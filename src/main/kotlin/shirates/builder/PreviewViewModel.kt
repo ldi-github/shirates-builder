@@ -92,7 +92,7 @@ class PreviewViewModel(
         }
         if (nicknameFile.toPath().exists()) {
             val result =
-                DialogHelper.showOkCancel("File exist. Do you want to rver write it?", content = nicknameFile)
+                DialogHelper.showOkCancel("File exist. Do you want to overwrite it?", content = nicknameFile)
             if (result == ButtonType.CANCEL) {
                 return false
             }
@@ -107,12 +107,12 @@ class PreviewViewModel(
 
     fun refresh() {
 
-        val xmlFilePath = screenBuilderViewModel.editViewModel.xmlFile.toPath()
-        if (xmlFilePath.exists()) {
-            val filename =
-                if (key.isNotBlank()) "$key.json"
-                else ""
-            nicknameFile = xmlFilePath.parent.resolve(filename).toString()
+        val workDirectoryPath = screenBuilderViewModel.editViewModel.workDirectory.toPath()
+        if (workDirectoryPath.exists()) {
+            val filename = if (key.isNotBlank()) "$key.json" else ""
+            nicknameFile = workDirectoryPath.resolve(filename).toString()
+        } else {
+            nicknameFile = ""
         }
 
         refreshPreviewJson()

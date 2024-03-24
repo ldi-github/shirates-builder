@@ -17,8 +17,11 @@ import shirates.core.driver.commandextension.helper.CellFlowContainer
 import shirates.core.logging.TestLog
 import shirates.core.utility.element.ElementCategoryExpressionUtility
 import shirates.core.utility.exists
+import shirates.core.utility.fileExists
+import shirates.core.utility.listFiles
 import shirates.core.utility.toPath
 import java.io.FileNotFoundException
+import java.nio.file.Files
 import kotlin.io.path.nameWithoutExtension
 
 class EditViewModel(
@@ -38,13 +41,13 @@ class EditViewModel(
     val startElementsViewModel = CombinationEditorViewModel(keyName = "start-elements", editViewModel = this)
     val endElementsViewModel = CombinationEditorViewModel(keyName = "end-elements", editViewModel = this)
 
-    val xmlFileProperty = SimpleStringProperty()
-    var xmlFile: String
+    val workDirectoryProperty = SimpleStringProperty()
+    var workDirectory: String
         get() {
-            return xmlFileProperty.value
+            return workDirectoryProperty.value
         }
         set(value) {
-            xmlFileProperty.set(value)
+            workDirectoryProperty.set(value)
         }
     val imageRatioProperty = SimpleDoubleProperty()
 
@@ -189,11 +192,31 @@ class EditViewModel(
     fun deleteScreenItem(item: ScreenItem) {
 
         nextScreenItem()
+        Files.deleteIfExists(item.imageFile.toPath())
+        Files.deleteIfExists(item.xmlFile.toPath())
         screenItems.remove(item)
         if (screenItems.isEmpty()) {
             selectedScreenItem = null
         }
         refreshKeyInfo()
+    }
+
+    fun recoverScreenItemFiles() {
+
+        for (screenItem in screenItems) {
+            if (screenItem.imageFile.fileExists().not()) {
+                val imageFileName = screenItem.imageFile.toPath().fileName
+                val imageFilePath = workDirectory.toPath().parent.resolve(imageFileName)
+                if (imageFilePath.exists()) {
+                    Files.copy(imageFilePath, screenItem.imageFile.toPath())
+                }
+                val xmlFileName = screenItem.xmlFile.toPath().fileName
+                val xmlFilePath = workDirectory.toPath().parent.resolve(xmlFileName)
+                if (xmlFilePath.exists()) {
+                    Files.copy(xmlFilePath, screenItem.xmlFile.toPath())
+                }
+            }
+        }
     }
 
     fun getIdPrefix(): String {
@@ -213,10 +236,19 @@ class EditViewModel(
         return items
     }
 
-    fun loadXmlFromDirectory(directory: String = TestLog.directoryForLog.toString()) {
+    fun copyFilesToWorkDirectory(startLineNo: Int, endLineNo: Int) {
 
-        val file = directory.toPath()
-        val dirPath = if (file.toFile().isDirectory) file else file.parent
+        val files = TestLog.directoryForLog.listFiles().filter { it.nameWithoutExtension.toIntOrNull() != null }
+        val targetFiles =
+            files.filter { startLineNo < it.nameWithoutExtension.toInt() && it.nameWithoutExtension.toInt() <= endLineNo }
+        for (file in targetFiles) {
+            Files.copy(file.toPath(), workDirectory.toPath().resolve(file.name))
+        }
+    }
+
+    fun loadFromDirectory(directory: String = TestLog.directoryForLog.resolve("work").toString()) {
+
+        val dirPath = directory.toPath()
         if (dirPath.exists().not()) {
             throw FileNotFoundException(dirPath.toString())
         }
@@ -224,10 +256,10 @@ class EditViewModel(
         files = files.filter { it.isFile && it.extension == "xml" }
             .sortedBy { it.nameWithoutExtension.toIntOrNull() ?: 9999 }
         if (files.isEmpty()) {
-            throw IllegalArgumentException("No xml file found in ${directory}.")
+            throw IllegalArgumentException("No data file found in ${directory}.")
         }
 
-        screenBuilderViewModel.settingsViewModel.setupConfig()
+        screenBuilderViewModel.settingsViewModel.setupProfile()
 
         for (f in files) {
             val screenItem = getOrCreateScreenItem(f.toString())
@@ -299,7 +331,7 @@ class EditViewModel(
         val screenItem = selectedScreenItem
         if (screenItem == null) {
             val prefs = screenBuilderViewModel.getPreferences()
-            xmlFile = prefs.get("xmlFile", "")
+            workDirectory = prefs.get("workDirectory", "")
             refresh()
             return
         }

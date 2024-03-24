@@ -7,9 +7,9 @@ import javafx.stage.Stage
 
 class BuilderApplication : Application() {
     override fun start(stage: Stage) {
-        shirates.builder.BuilderApplication.Companion.current = this
-        shirates.builder.BuilderApplication.Companion.currentStage = stage
-        val fxmlLoader = FXMLLoader(shirates.builder.BuilderApplication::class.java.getResource("main-view.fxml"))
+        current = this
+        currentStage = stage
+        val fxmlLoader = FXMLLoader(BuilderApplication::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load())
         scene.stylesheets.addAll(
             this.javaClass.getResource("builder.css").toExternalForm()
@@ -31,6 +31,6 @@ object BuilderApplicationExecute {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        Application.launch(shirates.builder.BuilderApplication::class.java)
+        Application.launch(BuilderApplication::class.java)
     }
 }

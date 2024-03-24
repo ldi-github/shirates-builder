@@ -48,7 +48,6 @@ class MainController : Initializable {
             screenBuilderStage!!.show()
             return
         }
-
         screenBuilderStage = createStage("screen-builder-view.fxml")
         screenBuilderStage!!.title = "Screen Builder"
         screenBuilderStage!!.show()

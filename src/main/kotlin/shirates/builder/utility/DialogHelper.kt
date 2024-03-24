@@ -23,11 +23,14 @@ object DialogHelper {
     ): File? {
         val dirChooser = DirectoryChooser()
         dirChooser.title = title
-        val initialDir =
+        var initialDir =
             if (initialDirectory.isNotBlank() && initialDirectory.toPath().exists()) initialDirectory
             else System.getProperty("user.home")
+        if (initialDir.toPath().toFile().isDirectory.not()) {
+            initialDir = initialDir.toPath().parent.toString()
+        }
         dirChooser.initialDirectory = File(initialDir)
-        val directory = dirChooser.showDialog(shirates.builder.BuilderApplication.currentStage)
+        val directory = dirChooser.showDialog(BuilderApplication.currentStage)
         return directory
     }
 
@@ -55,7 +58,7 @@ object DialogHelper {
             fileChooser.initialDirectory = UserVar.userHome.toFile()
         }
 
-        val file = fileChooser.showOpenDialog(shirates.builder.BuilderApplication.currentStage)
+        val file = fileChooser.showOpenDialog(BuilderApplication.currentStage)
         return file
     }
 

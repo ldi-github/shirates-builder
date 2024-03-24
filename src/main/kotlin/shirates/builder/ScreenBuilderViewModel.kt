@@ -1,6 +1,7 @@
 package shirates.builder
 
 import javafx.beans.property.SimpleBooleanProperty
+import shirates.core.UserVar
 import java.util.prefs.Preferences
 
 class ScreenBuilderViewModel {
@@ -29,10 +30,21 @@ class ScreenBuilderViewModel {
     fun savePreferences() {
 
         val prefs = Preferences.userNodeForPackage(javaClass)
-        prefs.put("testrunFileProperty", settingsViewModel.testrunFileProperty.value)
-        prefs.put("android", settingsViewModel.androidSelectedProperty.value.toString())
-        prefs.put("xmlFile", editViewModel.xmlFile)
-        prefs.put("satelliteAutoCandidate", editViewModel.satellitesViewModel.isAutoCheckBoxSelected.toString())
+        with(settingsViewModel) {
+            prefs.put("testrunFileProperty", testrunFileProperty.value)
+            prefs.put("android", androidSelectedProperty.value.toString())
+            prefs.put("androidVersion", androidVersion)
+            prefs.put("iosVersion", iosVersion)
+            prefs.put("profileName", profileName)
+            prefs.put("appPackageFile", appPackageFile)
+            prefs.put("packageOrBundleId", packageOrBundleId)
+            prefs.put("language", language)
+            prefs.put("locale", locale)
+        }
+        with(editViewModel) {
+            prefs.put("workDirectory", workDirectory)
+            prefs.put("satelliteAutoCandidate", satellitesViewModel.isAutoCheckBoxSelected.toString())
+        }
     }
 
     fun getPreferences(): Preferences {
@@ -42,16 +54,28 @@ class ScreenBuilderViewModel {
     fun loadPreferences() {
 
         val prefs = getPreferences()
-        settingsViewModel.testrunFileProperty.set(prefs.get("testrunFileProperty", ""))
-        val isAndroidSelected = prefs.get("android", "true").toBoolean()
-        if (isAndroidSelected) {
-            settingsViewModel.androidSelectedProperty.set(true)
-        } else {
-            settingsViewModel.iosSelectedProperty.set(true)
+        with(settingsViewModel) {
+            testrunFileProperty.set(prefs.get("testrunFileProperty", ""))
+            val isAndroidSelected = prefs.get("android", "true").toBoolean()
+            if (isAndroidSelected) {
+                androidSelected = true
+            } else {
+                iosSelected = true
+            }
+            androidVersion = prefs.get("androidVersion", "")
+            iosVersion = prefs.get("iosVersion", "")
+            profileName = prefs.get("profileName", "")
+            appPackageFile = prefs.get("appPackageFile", "")
+            packageOrBundleId = prefs.get("packageOrBundleId", "")
+            language = prefs.get("language", "")
+            locale = prefs.get("locale", "")
         }
-        editViewModel.xmlFileProperty.set(prefs.get("xmlFile", ""))
-        val isAutoCheckBoxSelected = prefs.get("satelliteAutoCandidate", "true").toBoolean()
-        editViewModel.satellitesViewModel.isAutoCheckBoxSelectedProperty.set(isAutoCheckBoxSelected)
+        with(editViewModel) {
+            val defaultWorkDirectory = UserVar.project.resolve("testConfig/testrun.properties").toString()
+            workDirectoryProperty.set(prefs.get("workDirectory", defaultWorkDirectory))
+            val isAutoCheckBoxSelected = prefs.get("satelliteAutoCandidate", "true").toBoolean()
+            satellitesViewModel.isAutoCheckBoxSelectedProperty.set(isAutoCheckBoxSelected)
+        }
     }
 
     fun refresh() {
