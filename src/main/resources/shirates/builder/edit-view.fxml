@@ -1,137 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane fx:id="rootNode" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shirates.builder.EditController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="rootNode" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1800.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="shirates.builder.EditController">
     <children>
-        <GridPane fx:id="editTabGridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <GridPane fx:id="editTabGridPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="3000.0" minWidth="10.0" prefWidth="397.0" />
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="2000.0" minWidth="10.0" prefWidth="629.0" />
-                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="2000.0" minWidth="10.0" prefWidth="518.0" />
+                <ColumnConstraints hgrow="NEVER" maxWidth="180.0" minWidth="180.0" prefWidth="180.0"/>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="3000.0" minWidth="10.0"
+                                   prefWidth="397.0"/>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="2000.0" minWidth="10.0"
+                                   prefWidth="629.0"/>
+                <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="2000.0" minWidth="10.0" prefWidth="518.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="22.0" prefHeight="22.0" valignment="CENTER" vgrow="NEVER" />
-                <RowConstraints minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER" />
-                <RowConstraints minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER" />
-                <RowConstraints maxHeight="994.0" minHeight="265.0" prefHeight="440.0" valignment="TOP" vgrow="ALWAYS" />
-                <RowConstraints maxHeight="773.0" minHeight="0.0" prefHeight="584.0" vgrow="ALWAYS" />
+                <RowConstraints minHeight="22.0" prefHeight="22.0" valignment="CENTER" vgrow="NEVER"/>
+                <RowConstraints minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER"/>
+                <RowConstraints minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER"/>
+                <RowConstraints maxHeight="994.0" minHeight="265.0" prefHeight="440.0" valignment="TOP" vgrow="ALWAYS"/>
+                <RowConstraints maxHeight="773.0" minHeight="0.0" prefHeight="584.0" vgrow="ALWAYS"/>
             </rowConstraints>
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1"
+                      GridPane.columnSpan="2" GridPane.rowIndex="1">
                     <GridPane.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                     </GridPane.margin>
                     <children>
-                        <TextField HBox.hgrow="ALWAYS" fx:id="xmlFileTextField" />
-                        <Button mnemonicParsing="false" text="..." fx:id="xmlFileButton" />
-                        <Button fx:id="loadXmlButton" mnemonicParsing="false" prefWidth="100.0" text="Load XML">
+                        <TextField fx:id="workDirectoryTextField" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="workDirectoryButton" mnemonicParsing="false" text="..."/>
+                        <Button fx:id="loadButton" mnemonicParsing="false" prefWidth="100.0" text="Load ">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" top="8.0"/>
                             </HBox.margin>
                         </Button>
                     </children>
                 </HBox>
-                <Button fx:id="previewJsonButton" mnemonicParsing="false" prefWidth="120.0" text="Preview JSON" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <Button fx:id="previewJsonButton" mnemonicParsing="false" prefWidth="120.0" text="Preview JSON"
+                        GridPane.columnIndex="3" GridPane.rowIndex="1">
                     <GridPane.margin>
-                        <Insets left="24.0" />
+                        <Insets left="24.0"/>
                     </GridPane.margin>
                 </Button>
-                <ScrollPane fx:id="imageScrollPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                <ScrollPane fx:id="imageScrollPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
+                            GridPane.rowIndex="3" GridPane.rowSpan="2">
                     <content>
                         <AnchorPane fx:id="imagePane" minHeight="0.0" minWidth="0.0">
                             <children>
-                                <Label style="-fx-text-fill: blue;" text="Capture screen or load xml file." AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="4.0" />
+                                <Label style="-fx-text-fill: blue;" text="Capture screen or load xml file."
+                                       AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="4.0"/>
                             </children>
                         </AnchorPane>
                     </content>
                     <GridPane.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                     </GridPane.margin>
                 </ScrollPane>
-                <VBox layoutX="10.0" layoutY="85.0" prefHeight="200.0" prefWidth="100.0" />
-                <Button fx:id="captureButton" mnemonicParsing="false" prefWidth="100.0" text="Capture" GridPane.rowIndex="2">
+                <VBox layoutX="10.0" layoutY="85.0" prefHeight="200.0" prefWidth="100.0"/>
+                <Button fx:id="captureButton" mnemonicParsing="false" prefWidth="100.0" text="Capture"
+                        GridPane.rowIndex="2">
                     <tooltip>
-                        <Tooltip text="Click to capture screen" />
+                        <Tooltip text="Click to capture screen"/>
                     </tooltip>
                     <GridPane.margin>
-                        <Insets left="36.0" />
+                        <Insets left="36.0"/>
                     </GridPane.margin>
                 </Button>
-            <ProgressIndicator fx:id="captureProgressIndicator" maxWidth="-Infinity" prefWidth="20.0" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </GridPane.margin>
-            </ProgressIndicator>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <ProgressIndicator fx:id="captureProgressIndicator" maxWidth="-Infinity" prefWidth="20.0"
+                                   GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                    </GridPane.margin>
+                </ProgressIndicator>
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="2">
                     <children>
                         <Button fx:id="captureWithScrollButton" mnemonicParsing="false" text="Capture with scroll">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                             </HBox.margin>
                         </Button>
                         <RadioButton fx:id="downRadioButton" mnemonicParsing="false" prefWidth="40.0" text="↓">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                             </HBox.margin>
                             <toggleGroup>
-                                <ToggleGroup fx:id="scrollDrectionGroup" />
+                                <ToggleGroup fx:id="scrollDrectionGroup"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="rightRadioButton" mnemonicParsing="false" prefWidth="40.0" text="→" toggleGroup="$scrollDrectionGroup">
+                        <RadioButton fx:id="rightRadioButton" mnemonicParsing="false" prefWidth="40.0" text="→"
+                                     toggleGroup="$scrollDrectionGroup">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                             </HBox.margin>
                         </RadioButton>
-                        <RadioButton fx:id="leftRadioButton" mnemonicParsing="false" prefWidth="40.0" text="←" toggleGroup="$scrollDrectionGroup">
+                        <RadioButton fx:id="leftRadioButton" mnemonicParsing="false" prefWidth="40.0" text="←"
+                                     toggleGroup="$scrollDrectionGroup">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                             </HBox.margin>
                         </RadioButton>
-                        <RadioButton fx:id="upRadioButton" mnemonicParsing="false" prefWidth="40.0" text="↑" toggleGroup="$scrollDrectionGroup">
+                        <RadioButton fx:id="upRadioButton" mnemonicParsing="false" prefWidth="40.0" text="↑"
+                                     toggleGroup="$scrollDrectionGroup">
                             <HBox.margin>
-                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                             </HBox.margin>
                         </RadioButton>
                     </children>
                     <GridPane.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                     </GridPane.margin>
                 </HBox>
-                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3"
+                      GridPane.rowSpan="2">
                     <children>
                         <HBox alignment="CENTER">
                             <children>
                                 <Button fx:id="previousScreenButton" mnemonicParsing="false" prefWidth="50.0" text="▲">
                                     <HBox.margin>
-                                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                                     </HBox.margin>
                                 </Button>
                                 <Button fx:id="nextScreenButton" mnemonicParsing="false" prefWidth="50.0" text="▼">
                                     <HBox.margin>
-                                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
                                     </HBox.margin>
                                 </Button>
                             </children>
@@ -140,264 +136,332 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: whitesmoke;">
                                     <children>
-                                        <VBox visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                        <ListView fx:id="screenListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <VBox visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                                        <ListView fx:id="screenListView" AnchorPane.bottomAnchor="0.0"
+                                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                  AnchorPane.topAnchor="0.0"/>
                                     </children>
                                 </AnchorPane>
                             </content>
                         </ScrollPane>
                     </children>
                 </VBox>
-                <Label text="XML File" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                <Label text="Work Directory" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                     <padding>
-                        <Insets right="5.0" />
+                        <Insets right="5.0"/>
                     </padding>
                 </Label>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <children>
-                                <Button fx:id="upSelectorItemButton" mnemonicParsing="false" prefWidth="100.0" text="▲">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                     </HBox.margin>
-                                </Button>
-                                <Button fx:id="downSelectorItemButton" mnemonicParsing="false" prefWidth="100.0" text="▼">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                     </HBox.margin>
-                                </Button>
-                                <Button fx:id="commentButton" mnemonicParsing="false" prefWidth="100.0" text="# Comment ">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="8.0" top="8.0" />
-                     </HBox.margin>
-                                </Button>
-               </children>
-               <GridPane.margin>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </GridPane.margin>
-            </HBox>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
-              <tabs>
-                <Tab fx:id="nicknamesTab" text="Nicknames  ">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                                  <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="37.0" layoutY="120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                          <TableView fx:id="selectorsTableView">
-                                              <columns>
-                                                  <TableColumn fx:id="nicknameColumn" prefWidth="250.0" text="Nickname" />
-                                                  <TableColumn fx:id="selectorExpressionColumn" prefWidth="358.0" text="Selector Expression" />
-                                          <TableColumn fx:id="keyInfoColumn" prefWidth="18.0" text="I" />
-                                              </columns>
-                                          </TableView>
-                                 </content>
-                                  </ScrollPane>
-                           </children>
+                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2"
+                      GridPane.rowIndex="2">
+                    <children>
+                        <Button fx:id="upSelectorItemButton" mnemonicParsing="false" prefWidth="100.0" text="▲">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="downSelectorItemButton" mnemonicParsing="false" prefWidth="100.0" text="▼">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="commentButton" mnemonicParsing="false" prefWidth="100.0" text="# Comment ">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="8.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                    <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                    </GridPane.margin>
+                </HBox>
+                <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="2"
+                         GridPane.rowIndex="3" GridPane.rowSpan="2">
+                    <tabs>
+                        <Tab fx:id="nicknamesTab" text="Nicknames  ">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="37.0" layoutY="120.0"
+                                                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <content>
+                                                <TableView fx:id="selectorsTableView">
+                                                    <columns>
+                                                        <TableColumn fx:id="nicknameColumn" prefWidth="250.0"
+                                                                     text="Nickname"/>
+                                                        <TableColumn fx:id="selectorExpressionColumn" prefWidth="358.0"
+                                                                     text="Selector Expression"/>
+                                                        <TableColumn fx:id="keyInfoColumn" prefWidth="18.0" text="I"/>
+                                                    </columns>
+                                                </TableView>
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="elementsTab" text="Elements     ">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <TreeView fx:id="elementsTreeView" AnchorPane.bottomAnchor="0.0"
+                                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                  AnchorPane.topAnchor="0.0"/>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+                <VBox GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                    <children>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                            <children>
+                                <GridPane fx:id="editorGridPane1" maxHeight="1.7976931348623157E308">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" maxWidth="525.0" minWidth="10.0"
+                                                           prefWidth="138.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0"
+                                                           prefWidth="259.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0"
+                                                           prefWidth="113.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="2013.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="10.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0"
+                                                        vgrow="NEVER"/>
+                                        <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="30.0"
+                                                        vgrow="NEVER"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label styleClass="labelBold" text="Nickname">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="Selector Expression" GridPane.rowIndex="1">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="class/type" GridPane.rowIndex="4">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="Widget" GridPane.rowIndex="3">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="text/label" GridPane.rowIndex="5">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="id/name" GridPane.rowIndex="6">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="access" GridPane.rowIndex="7">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="bounds" GridPane.rowIndex="8">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="cell" GridPane.rowIndex="9">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="scroll host" GridPane.rowIndex="10">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="11"/>
+                                        <TextField fx:id="nicknameTextField" GridPane.columnIndex="1"
+                                                   GridPane.columnSpan="2">
+                                            <GridPane.margin>
+                                                <Insets left="8.0" right="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="selectorExpressionTextField" GridPane.columnIndex="1"
+                                                   GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="widgetTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="3">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="classOrTypeTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="4">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="textOrLabelTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="5">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="idOrNameTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="6">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="accessTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="7">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="boundsTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="8">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="cellTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="9">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="scrollHostTextField"
+                                                   style="-fx-background-color: whitesmoke; -fx-border-color: silver;"
+                                                   GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                                   GridPane.rowIndex="10">
+                                            <GridPane.margin>
+                                                <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                    </children>
+                                </GridPane>
+                            </children>
                         </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab fx:id="elementsTab" text="Elements     ">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TreeView fx:id="elementsTreeView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-            <VBox GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
-               <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <GridPane fx:id="editorGridPane1" maxHeight="1.7976931348623157E308">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="NEVER" maxWidth="525.0" minWidth="10.0" prefWidth="138.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0" prefWidth="259.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0" prefWidth="113.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints maxHeight="2013.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="-Infinity" prefHeight="29.0" vgrow="NEVER" />
-                              <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                           </rowConstraints>
-                           <children>
-                              <Label styleClass="labelBold" text="Nickname">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="Selector Expression" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="class/type" GridPane.rowIndex="4">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="Widget" GridPane.rowIndex="3">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="text/label" GridPane.rowIndex="5">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="id/name" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="access" GridPane.rowIndex="7">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="bounds" GridPane.rowIndex="8">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="cell" GridPane.rowIndex="9">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label text="scroll host" GridPane.rowIndex="10">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="11" />
-                              <TextField fx:id="nicknameTextField" GridPane.columnIndex="1" GridPane.columnSpan="2">
-                                 <GridPane.margin>
-                                    <Insets left="8.0" right="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="selectorExpressionTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="widgetTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="classOrTypeTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="textOrLabelTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="idOrNameTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="accessTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="boundsTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="cellTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="scrollHostTextField" style="-fx-background-color: whitesmoke; -fx-border-color: silver;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10">
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                           </children>
-                        </GridPane>
-                     </children>
-                  </AnchorPane>
-                      <TabPane fx:id="editorTabPane" tabClosingPolicy="UNAVAILABLE">
-                          <tabs>
-                              <Tab fx:id="nicknameTab" text="Nickname            ">
-                                  <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0">
-                                          <children>
-                                    <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
-                                       <content>
-                                                    <GridPane fx:id="editorGridPane" maxHeight="1.7976931348623157E308">
-                                                        <columnConstraints>
-                                                            <ColumnConstraints hgrow="NEVER" maxWidth="525.0" minWidth="10.0" prefWidth="146.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0" prefWidth="251.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0" minWidth="10.0" prefWidth="113.0" />
-                                                        </columnConstraints>
-                                                        <rowConstraints>
-                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="ALWAYS" />
-                                                            <RowConstraints maxHeight="-Infinity" minHeight="200.0" vgrow="ALWAYS" />
-                                                        </rowConstraints>
-                                                        <children>
-                                                            <VBox fx:id="nicknameDefinitionVbox" prefHeight="200.0" prefWidth="500.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-                                                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="3">
-                                                   <GridPane.margin>
-                                                      <Insets top="8.0" />
-                                                   </GridPane.margin>
-                                                   <children>
-                                                      <Label fx:id="identityMessageLabel" style="-fx-text-fill: blue;" text="Configure unirue identity">
-                                                         <HBox.margin>
-                                                            <Insets bottom="8.0" left="8.0" right="8.0" />
-                                                         </HBox.margin>
-                                                      </Label>
-                                                   </children>
-                                                </HBox>
-                                                        </children>
-                                                    </GridPane>
-                                       </content>
-                                    </ScrollPane>
-                                          </children>
-                                      </AnchorPane>
-                                  </content>
-                              </Tab>
-                              <Tab fx:id="screenTab" text="Screen              ">
-                                  <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0">
-                                          <children>
-                                              <ScrollPane minWidth="-Infinity" prefWidth="510.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
-                                                  <content>
-                                                      <AnchorPane>
-                                                          <children>
-                                                              <VBox fx:id="screenConstraintsVbox" prefHeight="200.0" prefWidth="500.0" />
-                                                          </children>
-                                                      </AnchorPane>
-                                                  </content>
-                                              </ScrollPane>
-                                          </children>
-                                      </AnchorPane>
-                                  </content>
-                              </Tab>
-                          </tabs>
-                      </TabPane>
-               </children>
-            </VBox>
+                        <TabPane fx:id="editorTabPane" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab fx:id="nicknameTab" text="Nickname            ">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                                            <children>
+                                                <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
+                                                    <content>
+                                                        <GridPane fx:id="editorGridPane"
+                                                                  maxHeight="1.7976931348623157E308">
+                                                            <columnConstraints>
+                                                                <ColumnConstraints hgrow="NEVER" maxWidth="525.0"
+                                                                                   minWidth="10.0" prefWidth="146.0"/>
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0"
+                                                                                   minWidth="10.0" prefWidth="251.0"/>
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="922.0"
+                                                                                   minWidth="10.0" prefWidth="113.0"/>
+                                                            </columnConstraints>
+                                                            <rowConstraints>
+                                                                <RowConstraints maxHeight="-Infinity"
+                                                                                minHeight="-Infinity" prefHeight="40.0"
+                                                                                vgrow="ALWAYS"/>
+                                                                <RowConstraints maxHeight="-Infinity" minHeight="200.0"
+                                                                                vgrow="ALWAYS"/>
+                                                            </rowConstraints>
+                                                            <children>
+                                                                <VBox fx:id="nicknameDefinitionVbox" prefHeight="200.0"
+                                                                      prefWidth="500.0" GridPane.columnSpan="3"
+                                                                      GridPane.rowIndex="1"/>
+                                                                <HBox prefHeight="100.0" prefWidth="200.0"
+                                                                      GridPane.columnSpan="3">
+                                                                    <GridPane.margin>
+                                                                        <Insets top="8.0"/>
+                                                                    </GridPane.margin>
+                                                                    <children>
+                                                                        <Label fx:id="identityMessageLabel"
+                                                                               style="-fx-text-fill: blue;"
+                                                                               text="Configure unirue identity">
+                                                                            <HBox.margin>
+                                                                                <Insets bottom="8.0" left="8.0"
+                                                                                        right="8.0"/>
+                                                                            </HBox.margin>
+                                                                        </Label>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </GridPane>
+                                                    </content>
+                                                </ScrollPane>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                                <Tab fx:id="screenTab" text="Screen              ">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                                            <children>
+                                                <ScrollPane minWidth="-Infinity" prefWidth="510.0"
+                                                            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
+                                                    <content>
+                                                        <AnchorPane>
+                                                            <children>
+                                                                <VBox fx:id="screenConstraintsVbox" prefHeight="200.0"
+                                                                      prefWidth="500.0"/>
+                                                            </children>
+                                                        </AnchorPane>
+                                                    </content>
+                                                </ScrollPane>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
             </children>
         </GridPane>
     </children>

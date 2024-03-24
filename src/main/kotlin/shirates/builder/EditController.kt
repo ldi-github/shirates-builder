@@ -29,11 +29,9 @@ import shirates.core.driver.TestElement
 import shirates.core.driver.TestMode
 import shirates.core.driver.commandextension.*
 import shirates.core.driver.testDrive
-import shirates.core.logging.CodeExecutionContext
 import shirates.core.logging.TestLog
 import shirates.core.utility.exists
 import shirates.core.utility.fileExists
-import shirates.core.utility.replaceExtension
 import shirates.core.utility.toPath
 import shirates.spec.utilily.removeBrackets
 import java.net.URL
@@ -70,13 +68,13 @@ class EditController : Initializable {
     lateinit var editorGridPane: GridPane
 
     @FXML
-    lateinit var xmlFileTextField: TextField
+    lateinit var workDirectoryTextField: TextField
 
     @FXML
-    lateinit var xmlFileButton: Button
+    lateinit var workDirectoryButton: Button
 
     @FXML
-    lateinit var loadXmlButton: Button
+    lateinit var loadButton: Button
 
     @FXML
     private lateinit var previewJsonButton: Button
@@ -281,7 +279,6 @@ class EditController : Initializable {
         editViewModel.selectedScreenItemProperty.addListener { _, _, new ->
             screenListView.selectionModel.select(new)
             editViewModel.selectorItems.clear()
-            editViewModel.xmlFile = new?.xmlFile ?: ""
             changeToSelectedScreen()
         }
         editViewModel.selectedSelectorItemProperty.addListener { _, _, new ->
@@ -317,8 +314,8 @@ class EditController : Initializable {
             val dragboard = e.dragboard
             if (dragboard.hasFiles()) {
                 val file = dragboard.files.first()
-                editViewModel.xmlFileProperty.set(file.path)
-                editViewModel.loadXmlFromDirectory(file.path)
+                editViewModel.workDirectoryProperty.set(file.path)
+                editViewModel.loadFromDirectory(file.path)
             }
             e.isDropCompleted = true
             e.consume()
@@ -328,7 +325,7 @@ class EditController : Initializable {
     private fun setupBinding() {
 
         editViewModel.apply {
-            xmlFileTextField.textProperty().bindBidirectional(xmlFileProperty)
+            workDirectoryTextField.textProperty().bindBidirectional(workDirectoryProperty)
             downRadioButton.selectedProperty().bindBidirectional(downSelectedProperty)
             rightRadioButton.selectedProperty().bindBidirectional(rightSelectedProperty)
             leftRadioButton.selectedProperty().bindBidirectional(leftSelectedProperty)
@@ -346,7 +343,7 @@ class EditController : Initializable {
             scrollHostTextField.textProperty().bind(scrollHostProperty)
         }
         screenBuilderViewModel.disabledProperty.bindDisable(
-            xmlFileTextField, xmlFileButton, loadXmlButton, previewJsonButton,
+            workDirectoryTextField, workDirectoryButton, loadButton, previewJsonButton,
             captureButton, previousScreenButton, nextScreenButton,
             captureWithScrollButton, downRadioButton, rightRadioButton, leftRadioButton, upRadioButton,
             upSelectorItemButton, downSelectorItemButton, commentButton,
@@ -476,24 +473,13 @@ class EditController : Initializable {
                         val deleteMenu = MenuItem()
                         deleteMenu.text = "Delete"
                         contextMenu = ContextMenu(deleteMenu)
-
-                        val delete = {
-                            undoManager.doAction(
-                                undoTargets = UndoTargets(editViewModel),
-                                undoAction = { screenBuilderViewModel.refresh() },
-                                redoAction = { screenBuilderViewModel.refresh() }
-                            ) { data ->
-                                editViewModel.deleteScreenItem(item)
-                            }
-                        }
-
                         screenListView.setOnKeyPressed { e ->
                             if (e.code == KeyCode.DELETE || e.code == KeyCode.BACK_SPACE) {
-                                delete()
+                                deleteScreenItem()
                             }
                         }
                         deleteMenu.setOnAction { e ->
-                            delete()
+                            deleteScreenItem()
                         }
                     }
                 }
@@ -503,6 +489,25 @@ class EditController : Initializable {
             val item = new ?: return@addListener
             editViewModel.selectedScreenItem = item
             changeToSelectedScreen()
+        }
+    }
+
+    private fun deleteScreenItem() {
+
+        val item = editViewModel.selectedScreenItem ?: return
+
+        undoManager.doAction(
+            undoTargets = UndoTargets(editViewModel),
+            undoAction = {
+                editViewModel.recoverScreenItemFiles()
+                screenBuilderViewModel.refresh()
+            },
+            redoAction = {
+                editViewModel.deleteScreenItem(item)
+                screenBuilderViewModel.refresh()
+            }
+        ) { data ->
+            editViewModel.deleteScreenItem(item)
         }
     }
 
@@ -603,36 +608,37 @@ class EditController : Initializable {
         )
     }
 
-    fun xmlFileButtonAction() {
+    fun workingDirectionButtonAction() {
 
-        val initDir = editViewModel.xmlFileProperty.value
-        val xmlFile = DialogHelper.openFileDialog(initialDirectory = initDir, extensions = "xml")?.toString()
+        val initDir = editViewModel.workDirectoryProperty.value
+        val directory = DialogHelper.openDirectoryDialog(initialDirectory = initDir)?.toString()
             ?: return
-        editViewModel.loadXmlFromDirectory(xmlFile.toPath().parent.toString())
+        editViewModel.loadFromDirectory(directory)
+        screenBuilderViewModel.savePreferences()
     }
 
-    fun loadXmlButtonAction() {
-        val xmlFile = editViewModel.xmlFileProperty.value
-        if (xmlFile.isNullOrBlank()) {
-            DialogHelper.showError("XML File path is required.")
+    fun loadButtonAction() {
+        val workDirectory = editViewModel.workDirectoryProperty.value
+        if (workDirectory.isNullOrBlank()) {
+            DialogHelper.showError("Working Directory is required.")
             return
         }
-        if (xmlFile.toPath().toFile().extension != "xml") {
-            DialogHelper.showError("The file is not xml. ($xmlFile)")
+        if (workDirectory.toPath().exists().not()) {
+            DialogHelper.showError("Directory not found.", workDirectory)
             return
         }
-        if (xmlFile.toPath().exists().not()) {
-            DialogHelper.showError("File not found.", xmlFile)
+        if (workDirectory.toPath().toFile().isDirectory.not()) {
+            DialogHelper.showError("This is not directory.", workDirectory)
             return
         }
         if (editViewModel.selectorItems.any()) {
             val result =
-                DialogHelper.showOkCancel("Do you want to reload the xml file? Editing data will be discarded.")
+                DialogHelper.showOkCancel("Do you want to reload data? Editing data will be discarded.")
             if (result == ButtonType.CANCEL) {
                 return
             }
         }
-        editViewModel.loadXmlFromDirectory(xmlFile.toPath().parent.toString())
+        editViewModel.loadFromDirectory(workDirectory)
         screenBuilderController.selectTab("Edit")
     }
 
@@ -645,17 +651,17 @@ class EditController : Initializable {
                 return@setOnAction
             }
             screenBuilderViewModel.disable()
+            val startLineNo = TestLog.lines.count()
+            var endLineNo = 0
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
-                    testDrive.screenshot()
+                    testDrive.screenshot(force = true)
+                    endLineNo = TestLog.lines.count()
                 },
                 foregroundAction = {
-                    val xmlFile = TestLog.directoryForLog.resolve(CodeExecutionContext.lastScreenshot)
-                        .replaceExtension(".xml").toString()
-                    editViewModel.selectedScreenItem = editViewModel.getOrCreateScreenItem(xmlFile)
-                    editViewModel.getSelectorItemsForWidgets()
-                    editViewModel
+                    editViewModel.copyFilesToWorkDirectory(startLineNo = startLineNo, endLineNo = endLineNo)
+                    editViewModel.loadFromDirectory()
                 },
                 onProgressEnd = {
                     screenBuilderViewModel.enable()
@@ -670,10 +676,12 @@ class EditController : Initializable {
             }
             screenBuilderViewModel.disable()
             PropertiesManager.setPropertyValue("enableInnerCommandLog", "true")
+            val startLineNo = TestLog.lines.count()
+            var endLineNo = 0
             runAsync(
                 backgroundAction = {
                     testDrive.refreshCache()
-                    testDrive.screenshot()
+                    testDrive.screenshot(force = true)
                     if (editViewModel.downSelectedProperty.value) {
                         testDrive.scrollToBottom(flick = false)
                     } else if (editViewModel.rightSelectedProperty.value) {
@@ -683,20 +691,22 @@ class EditController : Initializable {
                     } else {
                         testDrive.scrollToTop(flick = false)
                     }
+                    endLineNo = TestLog.lines.count()
                 },
                 foregroundAction = {
-                    editViewModel.loadXmlFromDirectory()
+                    editViewModel.copyFilesToWorkDirectory(startLineNo = startLineNo, endLineNo = endLineNo)
+                    editViewModel.loadFromDirectory()
                 }, onProgressEnd = {
                     screenBuilderViewModel.enable()
                 }
             )
         }
-        xmlFileButton.setOnAction {
-            xmlFileButtonAction()
+        workDirectoryButton.setOnAction {
+            workingDirectionButtonAction()
         }
-        loadXmlButton.setOnAction {
+        loadButton.setOnAction {
             try {
-                loadXmlButtonAction()
+                loadButtonAction()
             } catch (t: Throwable) {
                 DialogHelper.showError(t.message ?: t.toString())
             }

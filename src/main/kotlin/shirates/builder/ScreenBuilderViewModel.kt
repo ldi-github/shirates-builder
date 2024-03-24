@@ -34,15 +34,14 @@ class ScreenBuilderViewModel {
             prefs.put("android", androidSelectedProperty.value.toString())
             prefs.put("androidVersion", androidVersion)
             prefs.put("iosVersion", iosVersion)
+            prefs.put("profileName", profileName)
+            prefs.put("appPackageFile", appPackageFile)
             prefs.put("packageOrBundleId", packageOrBundleId)
-            prefs.put("startupPackageOrBundleId", startupPackageOrBundleId)
-            prefs.put("startupActivity", startupActivity)
             prefs.put("language", language)
             prefs.put("locale", locale)
-            prefs.put("udid", udid)
         }
         with(editViewModel) {
-            prefs.put("xmlFile", xmlFile)
+            prefs.put("workDirectory", workDirectory)
             prefs.put("satelliteAutoCandidate", satellitesViewModel.isAutoCheckBoxSelected.toString())
         }
     }
@@ -64,15 +63,14 @@ class ScreenBuilderViewModel {
             }
             androidVersion = prefs.get("androidVersion", "")
             iosVersion = prefs.get("iosVersion", "")
+            profileName = prefs.get("profileName", "")
+            appPackageFile = prefs.get("appPackageFile", "")
             packageOrBundleId = prefs.get("packageOrBundleId", "")
-            startupPackageOrBundleId = prefs.get("startupPackageOrBundleId", "")
-            startupActivity = prefs.get("startupActivity", "")
             language = prefs.get("language", "")
             locale = prefs.get("locale", "")
-            udid = prefs.get("udid", "")
         }
         with(editViewModel) {
-            xmlFileProperty.set(prefs.get("xmlFile", ""))
+            workDirectoryProperty.set(prefs.get("workDirectory", ""))
             val isAutoCheckBoxSelected = prefs.get("satelliteAutoCandidate", "true").toBoolean()
             satellitesViewModel.isAutoCheckBoxSelectedProperty.set(isAutoCheckBoxSelected)
         }

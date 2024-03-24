@@ -11,23 +11,22 @@ import shirates.core.configuration.repository.ScreenRepository
 import shirates.core.customobject.CustomFunctionRepository
 import shirates.core.driver.TestContext
 import shirates.core.driver.TestDriver
-import shirates.core.driver.befavior.LanguageHelperAndroid
-import shirates.core.driver.befavior.LanguageHelperIos
-import shirates.core.driver.commandextension.canSelect
-import shirates.core.driver.commandextension.isAppInstalled
-import shirates.core.driver.commandextension.launchApp
-import shirates.core.driver.commandextension.pressHome
+import shirates.core.driver.commandextension.*
 import shirates.core.driver.testDrive
-import shirates.core.logging.Message
 import shirates.core.logging.TestLog
 import shirates.core.macro.MacroRepository
 import shirates.core.server.AppiumServerManager
+import shirates.core.utility.fileExists
 import shirates.core.utility.toPath
 import java.nio.file.Path
 
 class SettingsViewModel(
     val screenBuilderViewModel: ScreenBuilderViewModel
 ) {
+    val editViewModel: EditViewModel
+        get() {
+            return screenBuilderViewModel.editViewModel
+        }
 
     val projectDirectory: String
         get() {
@@ -77,6 +76,15 @@ class SettingsViewModel(
         }
     val iosVersionProperty = SimpleStringProperty("")
 
+    var profileName: String
+        get() {
+            return profileNameProperty.value
+        }
+        set(value) {
+            profileNameProperty.set(value)
+        }
+    val profileNameProperty = SimpleStringProperty("")
+
     var appPackageFile: String
         get() {
             return appPackageFileProperty.value
@@ -94,24 +102,6 @@ class SettingsViewModel(
             packageOrBundleIdProperty.set(value)
         }
     val packageOrBundleIdProperty = SimpleStringProperty("")
-
-    var startupPackageOrBundleId: String
-        get() {
-            return startupPackageOrBundleIdProperty.value
-        }
-        set(value) {
-            startupPackageOrBundleIdProperty.set(value)
-        }
-    val startupPackageOrBundleIdProperty = SimpleStringProperty("")
-
-    var startupActivity: String
-        get() {
-            return startupActivityProperty.value
-        }
-        set(value) {
-            startupActivityProperty.set(value)
-        }
-    val startupActivityProperty = SimpleStringProperty("")
 
     var language: String
         get() {
@@ -131,14 +121,6 @@ class SettingsViewModel(
         }
     val localeProperty = SimpleStringProperty("")
 
-    var udid: String
-        get() {
-            return udidProperty.value
-        }
-        set(value) {
-            udidProperty.set(value)
-        }
-    val udidProperty = SimpleStringProperty("")
 
     /**
      * Other Properties
@@ -192,19 +174,21 @@ class SettingsViewModel(
             importDirectories = testProfile.testConfig!!.importScreenDirectories
         )
 
+        if (testProfile.udid.isNotBlank()) {
+            profileName = testProfile.udid
+        }
         appPackageFile = testProfile.appPackageFile ?: ""
         packageOrBundleId = testProfile.packageOrBundleId ?: ""
-        startupPackageOrBundleId = testProfile.startupPackageOrBundleId ?: ""
-        startupActivity = testProfile.startupActivity ?: ""
         language = testProfile.language
         locale = testProfile.locale
-        udid = testProfile.udid
     }
 
     fun startSession() {
 
         screenBuilderViewModel.editViewModel.clearEditData()
-
+        TestLog.clear()
+        TestLog.write("")
+        TestLog.write("Starting new session")
         setupProfile()
 
         // testContext
@@ -237,61 +221,22 @@ class SettingsViewModel(
         }
 
         // AppiumDriver
-        val lastProfile = TestDriver.lastTestContext.profile
-        if (lastProfile.profileName.isBlank()) {
-            // First time
-            TestDriver.createAppiumDriver()
-        } else {
-            // Second time or later
-            if (testProfile.isSameProfile(lastProfile) && TestDriver.canReuse) {
-                // Reuse Appium session if possible
-                TestLog.info(
-                    Message.message(
-                        id = "reusingAppiumDriverSession",
-                        arg1 = configPath.toString(),
-                        arg2 = testProfile.profileName
-                    )
-                )
-                TestDriver.testContext = TestDriver.lastTestContext
-            } else {
-                // Reset Appium session
-                TestDriver.resetAppiumSession()
-            }
-        }
-        screenBuilderViewModel.editViewModel.xmlFile = ""
+        TestDriver.createAppiumDriver()
 
-        if (testProfile.isAndroid) {
-            setLanguageAndroid()
-            if (testProfile.startupPackageOrBundleId != null) {
-                if (testDrive.isAppInstalled(packageOrBundleId = testProfile.startupPackageOrBundleId)) {
-                    if (testProfile.startupActivity != null) {
-                        testDrive.launchApp(appNameOrAppIdOrActivityName = "${testProfile.startupPackageOrBundleId}/${testProfile.startupActivity}")
-                    } else {
-                        testDrive.launchApp(testProfile.startupPackageOrBundleId!!)
-                    }
-                }
-            } else {
-                testDrive.pressHome()
-            }
-        } else {
-            LanguageHelperIos.setLanguage()
+        if (testDrive.isAppInstalled().not()) {
+            testDrive.installApp()
+        }
+        if (testDrive.isApp()) {
+            testDrive.terminateApp()
+        }
+        testDrive.launchApp(sync = false)
+
+        editViewModel.workDirectory = TestLog.directoryForLog.resolve("work").toString()
+        if (editViewModel.workDirectory.fileExists().not()) {
+            editViewModel.workDirectory.toPath().toFile().mkdir()
         }
 
         TestLog.info("Click [Capture] button in Screen Builder to capture screen.")
-    }
-
-    private fun setLanguageAndroid() {
-
-        if (testProfile.language == "ja") {
-            var isJa = testDrive.canSelect("*ホーム*||*設定*")
-            if (isJa) return
-
-            LanguageHelperAndroid.gotoLocaleSettings()
-            val language = LanguageHelperAndroid.getLanguage()
-            isJa = language == "日本語"
-            if (isJa) return
-        }
-        LanguageHelperAndroid.setLanguage("日本語", "日本")
     }
 
     fun setupProfile(): TestProfile {
@@ -313,15 +258,12 @@ class SettingsViewModel(
         )
 
         // Profile
-//        testProfile = TestProfile()
-
-        val profile = testProfile
+        val profile = TestProfile()
+        profile.profileName = profileName
+        profile.appPackageFile = appPackageFile
         profile.packageOrBundleId = packageOrBundleId
-        profile.startupPackageOrBundleId = startupPackageOrBundleId
-        profile.startupActivity = startupActivity
         profile.language = language
         profile.locale = locale
-        profile.udid = udid
         if (androidSelected) {
             profile.platformName = "android"
             profile.platformVersion = androidVersion

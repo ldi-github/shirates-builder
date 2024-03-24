@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import kotlinx.coroutines.DelicateCoroutinesApi
 import shirates.builder.utility.DialogHelper
+import shirates.builder.utility.UrlUtility
 import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.runAsync
@@ -61,16 +62,16 @@ class SettingsController : Initializable {
     lateinit var iosVersionTextField: TextField
 
     @FXML
+    lateinit var profileNameTextField: TextField
+
+    @FXML
+    lateinit var seeDetailHyperlink: Hyperlink
+
+    @FXML
     lateinit var appPackageFileTextField: TextField
 
     @FXML
     lateinit var packageOrBundleIdTextField: TextField
-
-    @FXML
-    lateinit var startupPackageOrBundleIdTextField: TextField
-
-    @FXML
-    lateinit var startupActivityLabel: Label
 
     @FXML
     lateinit var startupActivityTextField: TextField
@@ -82,25 +83,10 @@ class SettingsController : Initializable {
     lateinit var localeTextField: TextField
 
     @FXML
-    lateinit var udidTextField: TextField
-
-    @FXML
     lateinit var startButton: Button
 
     @FXML
     lateinit var sessionProgressIndicator: ProgressIndicator
-
-    @FXML
-    lateinit var loadXmlButton: Button
-
-    @FXML
-    lateinit var xmlfileHBox: HBox
-
-    @FXML
-    lateinit var xmlFileTextField: TextField
-
-    @FXML
-    lateinit var xmlFileButton: Button
 
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
@@ -133,33 +119,27 @@ class SettingsController : Initializable {
             iosRadioButton.selectedProperty().bindBidirectional(iosSelectedProperty)
             iosVersionTextField.textProperty().bindBidirectional(iosVersionProperty)
 
+            profileNameTextField.textProperty().bindBidirectional(profileNameProperty)
             appPackageFileTextField.textProperty().bindBidirectional(appPackageFileProperty)
             packageOrBundleIdTextField.textProperty().bindBidirectional(packageOrBundleIdProperty)
-            startupPackageOrBundleIdTextField.textProperty().bindBidirectional(startupPackageOrBundleIdProperty)
-            startupActivityTextField.textProperty().bindBidirectional(startupActivityProperty)
             languageTextField.textProperty().bindBidirectional(languageProperty)
             localeTextField.textProperty().bindBidirectional(localeProperty)
-            udidTextField.textProperty().bindBidirectional(udidProperty)
         }
-
-        xmlFileTextField.textProperty().bindBidirectional(screenBuilderViewModel.editViewModel.xmlFileProperty)
 
         screenBuilderViewModel.disabledProperty.bindDisable(
             testrunFileTextField, testrunFileButton, loadTestrunFileButton,
             androidRadioButton, androidVersionTextField,
             iosRadioButton, iosVersionTextField,
+            profileNameTextField,
             appPackageFileTextField,
-            packageOrBundleIdTextField, startupPackageOrBundleIdTextField, startupActivityTextField,
-            languageTextField, localeTextField, udidTextField,
+            packageOrBundleIdTextField,
+            languageTextField, localeTextField,
             startButton,
-            loadXmlButton, xmlFileTextField, xmlFileButton
         )
         sessionProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
 
         androidVersionTextField.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
         iosVersionTextField.visibleProperty().bind(settingsViewModel.iosSelectedProperty)
-        startupActivityLabel.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
-        startupActivityTextField.visibleProperty().bind(settingsViewModel.androidSelectedProperty)
     }
 
     private fun setupDragAndDrop() {
@@ -173,19 +153,6 @@ class SettingsController : Initializable {
             if (dragboard.hasFiles()) {
                 val file = dragboard.files.first()
                 settingsViewModel.testrunFileProperty.set(file.path)
-            }
-            e.isDropCompleted = true
-            e.consume()
-        }
-        xmlfileHBox.setOnDragOver { e ->
-            e.acceptLink()
-            e.consume()
-        }
-        xmlfileHBox.setOnDragDropped { e ->
-            val dragboard = e.dragboard
-            if (dragboard.hasFiles()) {
-                val file = dragboard.files.first()
-                screenBuilderViewModel.editViewModel.xmlFileProperty.set(file.path)
             }
             e.isDropCompleted = true
             e.consume()
@@ -211,6 +178,13 @@ class SettingsController : Initializable {
             }
             settingsViewModel.loadFromTestrunFile()
         }
+        seeDetailHyperlink.setOnAction {
+            if (settingsViewModel.language == "ja") {
+                UrlUtility.openWebPage("https://ldi-github.github.io/shirates-core/basic/parameter/automatic_device_detection_ja.html")
+            } else {
+                UrlUtility.openWebPage("https://ldi-github.github.io/shirates-core/basic/parameter/automatic_device_detection.html")
+            }
+        }
         startButton.setOnAction {
             if (validateTestrunFile().not()) {
                 return@setOnAction
@@ -229,15 +203,6 @@ class SettingsController : Initializable {
             ) {
                 screenBuilderController.selectTab("Edit")
             }
-        }
-        xmlFileButton.setOnAction {
-            if (validateTestrunFile().not()) {
-                return@setOnAction
-            }
-            screenBuilderController.editController.xmlFileButtonAction()
-        }
-        loadXmlButton.setOnAction {
-            screenBuilderController.editController.loadXmlButtonAction()
         }
     }
 
