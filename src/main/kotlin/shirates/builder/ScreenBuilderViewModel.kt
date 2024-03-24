@@ -1,6 +1,7 @@
 package shirates.builder
 
 import javafx.beans.property.SimpleBooleanProperty
+import shirates.core.UserVar
 import java.util.prefs.Preferences
 
 class ScreenBuilderViewModel {
@@ -70,7 +71,8 @@ class ScreenBuilderViewModel {
             locale = prefs.get("locale", "")
         }
         with(editViewModel) {
-            workDirectoryProperty.set(prefs.get("workDirectory", ""))
+            val defaultWorkDirectory = UserVar.project.resolve("testConfig/testrun.properties").toString()
+            workDirectoryProperty.set(prefs.get("workDirectory", defaultWorkDirectory))
             val isAutoCheckBoxSelected = prefs.get("satelliteAutoCandidate", "true").toBoolean()
             satellitesViewModel.isAutoCheckBoxSelectedProperty.set(isAutoCheckBoxSelected)
         }

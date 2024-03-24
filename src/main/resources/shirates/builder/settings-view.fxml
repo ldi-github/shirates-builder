@@ -134,6 +134,11 @@
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </GridPane.margin>
             </HBox>
+            <TextField fx:id="profileNameTextField" promptText="You can specify which device to run on with profileName" GridPane.columnIndex="1" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </TextField>
             <TextField fx:id="appPackageFileTextField" GridPane.columnIndex="1" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -205,11 +210,6 @@
                   <Insets left="16.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="profileNameTextField" promptText="You can specify which device to run on with profileName" GridPane.columnIndex="1" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </GridPane.margin>
-            </TextField>
             <HBox GridPane.columnIndex="1" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="8.0" />
