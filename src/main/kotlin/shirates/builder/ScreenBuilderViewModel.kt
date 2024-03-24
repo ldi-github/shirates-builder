@@ -55,7 +55,8 @@ class ScreenBuilderViewModel {
 
         val prefs = getPreferences()
         with(settingsViewModel) {
-            testrunFileProperty.set(prefs.get("testrunFileProperty", ""))
+            val defaultTestrunFile = UserVar.project.resolve("testConfig/testrun.properties").toString()
+            testrunFileProperty.set(prefs.get("testrunFileProperty", defaultTestrunFile))
             val isAndroidSelected = prefs.get("android", "true").toBoolean()
             if (isAndroidSelected) {
                 androidSelected = true
@@ -71,8 +72,7 @@ class ScreenBuilderViewModel {
             locale = prefs.get("locale", "")
         }
         with(editViewModel) {
-            val defaultWorkDirectory = UserVar.project.resolve("testConfig/testrun.properties").toString()
-            workDirectoryProperty.set(prefs.get("workDirectory", defaultWorkDirectory))
+            workDirectoryProperty.set(prefs.get("workDirectory", ""))
             val isAutoCheckBoxSelected = prefs.get("satelliteAutoCandidate", "true").toBoolean()
             satellitesViewModel.isAutoCheckBoxSelectedProperty.set(isAutoCheckBoxSelected)
         }
