@@ -249,6 +249,12 @@ class SettingsViewModel(
             PropertiesManager.properties.set("os", "ios")
         }
 
+        configPath = projectDirectory.toPath().resolve(PropertiesManager.configFile).toString()
+        testProfile = setupConfigAndProfile(
+            configPath = configPath.toPath(),
+            profileName = PropertiesManager.profile
+        )
+
         val testConfigName = "autoConfig"
 
         // testResults
@@ -258,7 +264,7 @@ class SettingsViewModel(
         )
 
         // Profile
-        val profile = TestProfile()
+        val profile = testProfile
         profile.profileName = profileName
         profile.appPackageFile = appPackageFile
         profile.packageOrBundleId = packageOrBundleId
@@ -281,11 +287,7 @@ class SettingsViewModel(
             }
         }
 
-        profile.appIconName = "App Icon Name"
         profile.appiumServerUrl = PropertiesManager.getPropertyValue("appiumServerUrl")
-//        if (profile.isiOS) {
-//            profile.capabilities["appium:bundleId"] = profile.packageOrBundleId
-//        }
         profile.appiumPath = "appium"
 
         if (profile.testConfig?.importScreenDirectories.isNullOrEmpty().not()) {

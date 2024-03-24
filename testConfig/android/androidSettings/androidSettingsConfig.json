@@ -4,12 +4,12 @@
   "appIconName": "Settings",
 
   "packageOrBundleId": "com.android.settings",
-
-  "settings": {
-    "always_finish_activities": "0"
-  },
+  "startupPackageOrBundleId": "com.android.settings",
+  "startupActivity": "com.android.settings.Settings",
 
   "capabilities": {
+    "language": "en",
+    "locale": "US"
   },
 
   "profiles": [
