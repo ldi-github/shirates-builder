@@ -11,7 +11,7 @@ plugins {
 group = "shirates"
 version = "0.9.0-SNAPSHOT"
 
-val shiratesCoreVersion = "6.7.3-SNAPSHOT"
+val shiratesCoreVersion = "6.7.4"
 val appiumClientVersion = "9.1.0"
 
 val userHome = System.getProperty("user.home")
@@ -48,8 +48,8 @@ dependencies {
     implementation(kotlin("reflect"))
 
     // JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 
     // shirates-core
     implementation("io.github.ldi-github:shirates-core:$shiratesCoreVersion")
@@ -59,13 +59,13 @@ dependencies {
     testImplementation("io.appium:java-client:$appiumClientVersion")
 
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    testImplementation("org.apache.logging.log4j:log4j-core:2.20.0")
+    testImplementation("org.apache.logging.log4j:log4j-core:2.22.1")
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-nop
-    testImplementation("org.slf4j:slf4j-nop:2.0.5")
+    testImplementation("org.slf4j:slf4j-nop:2.0.9")
 
     // Apache Commons IO
-    testImplementation("commons-io:commons-io:2.11.0")
+    testImplementation("commons-io:commons-io:2.15.1")
 
     // Assert J
     testImplementation("org.assertj:assertj-core:3.24.2")
