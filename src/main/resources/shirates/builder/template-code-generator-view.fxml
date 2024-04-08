@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -21,11 +22,12 @@
                 <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="19.0" valignment="CENTER" vgrow="NEVER" />
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" valignment="CENTER" vgrow="NEVER" />
                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" valignment="CENTER" vgrow="NEVER" />
                 <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="51.0" valignment="CENTER" vgrow="NEVER" />
                 <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="42.0" valignment="CENTER" vgrow="NEVER" />
             </rowConstraints>
             <children>
-                <Label text="Input Directory (Spec-Report Files)" GridPane.rowIndex="2">
+                <Label text="Output Directory" GridPane.rowIndex="1">
                     <padding>
                         <Insets right="5.0" />
                     </padding>
@@ -33,15 +35,6 @@
                         <Insets left="16.0" />
                     </GridPane.margin>
                 </Label>
-                <HBox fx:id="specReportHBox" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <children>
-                        <TextField fx:id="inputDirectoryTextField" promptText="Drop directory to this area" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="specReportFileButton" mnemonicParsing="false" text="..." />
-                    </children>
-                    <GridPane.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                    </GridPane.margin>
-                </HBox>
                 <HBox fx:id="outputDirectoryHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
                         <TextField fx:id="outputDirectoryTextField" HBox.hgrow="ALWAYS" />
@@ -51,7 +44,7 @@
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                     </GridPane.margin>
                 </HBox>
-                <Label text="Output Directory" GridPane.rowIndex="1">
+                <Label text="Input Directory (Spec-Report Files)" GridPane.rowIndex="2">
                     <padding>
                         <Insets right="5.0" />
                     </padding>
@@ -59,13 +52,40 @@
                         <Insets left="16.0" />
                     </GridPane.margin>
                 </Label>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <HBox fx:id="inputDirectoryHBox" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <children>
-                        <Button fx:id="generateTemplateButton" mnemonicParsing="false" prefWidth="160.0" text="Generate Template">
+                        <TextField fx:id="inputDirectoryTextField" promptText="Drop the directory to here" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="inputDirectoryButton" mnemonicParsing="false" text="..." />
+                    </children>
+                    <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                    </GridPane.margin>
+                </HBox>
+            <Label text="logLanguage" GridPane.rowIndex="3">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="logLanguageTextField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </GridPane.margin>
+            </TextField>
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <children>
+                        <Button fx:id="generateTemplateCodeButton" mnemonicParsing="false" prefWidth="160.0" text="Generate Template Code">
                             <HBox.margin>
                                 <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                             </HBox.margin>
                         </Button>
+                  <ProgressIndicator fx:id="generateTemplateProgressIndicator" prefHeight="20.0" prefWidth="20.0">
+                     <HBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </HBox.margin>
+                  </ProgressIndicator>
                     </children>
                     <GridPane.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

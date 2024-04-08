@@ -16,10 +16,10 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.util.Callback
 import shirates.builder.utility.DialogHelper
+import shirates.builder.utility.async
 import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
 import shirates.builder.utility.draganddrop.pushObject
-import shirates.builder.utility.runAsync
 import shirates.builder.utility.undo.*
 import shirates.core.configuration.PropertiesManager
 import shirates.core.configuration.ScreenInfo
@@ -650,23 +650,21 @@ class EditController : Initializable {
                 screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            screenBuilderViewModel.disable()
             val startLineNo = TestLog.lines.count()
             var endLineNo = 0
-            runAsync(
-                backgroundAction = {
+            async()
+                .progressStart {
+                    screenBuilderViewModel.disable()
+                }.background {
                     testDrive.refreshCache()
                     testDrive.screenshot(force = true)
                     endLineNo = TestLog.lines.count()
-                },
-                foregroundAction = {
+                }.foreground {
                     editViewModel.copyFilesToWorkDirectory(startLineNo = startLineNo, endLineNo = endLineNo)
                     editViewModel.loadFromDirectory()
-                },
-                onProgressEnd = {
+                }.progressEnd {
                     screenBuilderViewModel.enable()
-                }
-            )
+                }.start()
         }
         captureWithScrollButton.setOnAction {
             if (testDrive.driver.isReady.not()) {
@@ -674,12 +672,13 @@ class EditController : Initializable {
                 screenBuilderController.selectTab("Settings")
                 return@setOnAction
             }
-            screenBuilderViewModel.disable()
             PropertiesManager.setPropertyValue("enableInnerCommandLog", "true")
             val startLineNo = TestLog.lines.count()
             var endLineNo = 0
-            runAsync(
-                backgroundAction = {
+            async()
+                .progressStart {
+                    screenBuilderViewModel.disable()
+                }.background {
                     testDrive.refreshCache()
                     testDrive.screenshot(force = true)
                     if (editViewModel.downSelectedProperty.value) {
@@ -692,14 +691,12 @@ class EditController : Initializable {
                         testDrive.scrollToTop(flick = false)
                     }
                     endLineNo = TestLog.lines.count()
-                },
-                foregroundAction = {
+                }.foreground {
                     editViewModel.copyFilesToWorkDirectory(startLineNo = startLineNo, endLineNo = endLineNo)
                     editViewModel.loadFromDirectory()
-                }, onProgressEnd = {
+                }.progressEnd {
                     screenBuilderViewModel.enable()
-                }
-            )
+                }.start()
         }
         workDirectoryButton.setOnAction {
             workingDirectionButtonAction()

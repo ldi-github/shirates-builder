@@ -9,9 +9,9 @@ import javafx.scene.layout.HBox
 import kotlinx.coroutines.DelicateCoroutinesApi
 import shirates.builder.utility.DialogHelper
 import shirates.builder.utility.UrlUtility
+import shirates.builder.utility.async
 import shirates.builder.utility.bindDisable
 import shirates.builder.utility.draganddrop.acceptLink
-import shirates.builder.utility.runAsync
 import shirates.core.utility.exists
 import shirates.core.utility.toPath
 import java.net.URL
@@ -193,16 +193,14 @@ class SettingsController : Initializable {
             screenBuilderController.editController.clearImagePane()
             screenBuilderViewModel.disable()
 
-            runAsync(
-                backgroundAction = {
+            async()
+                .background {
                     settingsViewModel.startSession()
-                },
-                onProgressEnd = {
+                }.foreground {
+                    screenBuilderController.selectTab("Edit")
+                }.progressEnd {
                     screenBuilderViewModel.enable()
-                }
-            ) {
-                screenBuilderController.selectTab("Edit")
-            }
+                }.start()
         }
     }
 

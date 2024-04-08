@@ -27,9 +27,14 @@ class ScreenBuilderViewModel {
         disabled = false
     }
 
+    fun getPreferences(): Preferences {
+
+        return Preferences.userNodeForPackage(javaClass)
+    }
+
     fun savePreferences() {
 
-        val prefs = Preferences.userNodeForPackage(javaClass)
+        val prefs = getPreferences()
         with(settingsViewModel) {
             prefs.put("testrunFileProperty", testrunFileProperty.value)
             prefs.put("android", androidSelectedProperty.value.toString())
@@ -45,10 +50,6 @@ class ScreenBuilderViewModel {
             prefs.put("workDirectory", workDirectory)
             prefs.put("satelliteAutoCandidate", satellitesViewModel.isAutoCheckBoxSelected.toString())
         }
-    }
-
-    fun getPreferences(): Preferences {
-        return Preferences.userNodeForPackage(javaClass)
     }
 
     fun loadPreferences() {
