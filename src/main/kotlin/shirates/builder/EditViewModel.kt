@@ -13,6 +13,7 @@ import shirates.core.driver.*
 import shirates.core.driver.TestMode.isiOS
 import shirates.core.driver.commandextension.findElements
 import shirates.core.driver.commandextension.getCell
+import shirates.core.driver.commandextension.getSelector
 import shirates.core.driver.commandextension.helper.CellFlowContainer
 import shirates.core.logging.TestLog
 import shirates.core.utility.element.ElementCategoryExpressionUtility
@@ -146,7 +147,7 @@ class EditViewModel(
         } else {
             cellProperty.set(cell.toString())
         }
-        val scrollHost = testElement.ancestorScrollable
+        val scrollHost = testElement.scrollHost
         if (scrollHost.isEmpty) {
             scrollHostProperty.set("")
         } else {

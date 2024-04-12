@@ -100,14 +100,14 @@ class SelectorItem(
         this.selectorExpression = selectorExpression.ifBlank { "${testElement.selector}" }
         this.keyInfo = keyInfo
         this.cell = testElement.getCell().toString()
-        val ancestorScrollable = testElement.ancestorScrollable
+        val scrollHost = testElement.scrollHost
         this.scrollHost =
-            if (ancestorScrollable.isEmpty) ""
+            if (scrollHost.isEmpty) ""
             else {
-                if (ancestorScrollable.idOrNameSimple.isNotBlank()) {
-                    "#${ancestorScrollable.idOrNameSimple}"
+                if (scrollHost.idOrNameSimple.isNotBlank()) {
+                    "#${scrollHost.idOrNameSimple}"
                 } else {
-                    ancestorScrollable.getUniqueSelector().toString()
+                    scrollHost.getUniqueSelector().toString()
                 }
             }
         this.testElement = testElement
