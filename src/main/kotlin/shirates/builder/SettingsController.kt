@@ -191,9 +191,11 @@ class SettingsController : Initializable {
             }
             screenBuilderViewModel.savePreferences()
             screenBuilderController.editController.clearImagePane()
-            screenBuilderViewModel.disable()
 
             async()
+                .progressStart {
+                    screenBuilderViewModel.disable()
+                }
                 .background {
                     settingsViewModel.startSession()
                 }.foreground {

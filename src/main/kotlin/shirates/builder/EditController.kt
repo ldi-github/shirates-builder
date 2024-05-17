@@ -29,6 +29,7 @@ import shirates.core.driver.TestElement
 import shirates.core.driver.TestMode
 import shirates.core.driver.commandextension.*
 import shirates.core.driver.testDrive
+import shirates.core.exception.TestDriverException
 import shirates.core.logging.TestLog
 import shirates.core.utility.exists
 import shirates.core.utility.fileExists
@@ -174,6 +175,9 @@ class EditController : Initializable {
 
     @FXML
     private lateinit var scrollHostTextField: TextField
+
+    @FXML
+    private lateinit var saveImageButton: Button
 
     @FXML
     private lateinit var upSelectorItemButton: Button
@@ -346,7 +350,7 @@ class EditController : Initializable {
             workDirectoryTextField, workDirectoryButton, loadButton, previewJsonButton,
             captureButton, previousScreenButton, nextScreenButton,
             captureWithScrollButton, downRadioButton, rightRadioButton, leftRadioButton, upRadioButton,
-            upSelectorItemButton, downSelectorItemButton, commentButton,
+            saveImageButton, upSelectorItemButton, downSelectorItemButton, commentButton,
             nicknameTextField, selectorExpressionTextField
         )
         captureProgressIndicator.visibleProperty().bind(screenBuilderViewModel.disabledProperty)
@@ -656,6 +660,11 @@ class EditController : Initializable {
                 .progressStart {
                     screenBuilderViewModel.disable()
                 }.background {
+                    try {
+                        testDrive.select("", useCache = false)
+                    } catch (t: Throwable) {
+                        throw TestDriverException("Appium is not ready. Start Appium session.")
+                    }
                     testDrive.refreshCache()
                     testDrive.screenshot(force = true)
                     endLineNo = TestLog.lines.count()
@@ -720,6 +729,9 @@ class EditController : Initializable {
             val item = editViewModel.previousScreenItem()
             screenListView.scrollTo(item)
             screenListView.requestFocus()
+        }
+        saveImageButton.setOnAction {
+            editViewModel.saveSelectedElementImage()
         }
         upSelectorItemButton.setOnAction {
             val item = editViewModel.selectedSelectorItem ?: return@setOnAction

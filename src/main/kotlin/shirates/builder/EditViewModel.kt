@@ -7,18 +7,22 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.scene.control.TreeItem
 import javafx.scene.input.MouseEvent
+import shirates.builder.utility.ClipboardUtility.setToClipboard
 import shirates.builder.utility.TestElementRelativeUtility
 import shirates.builder.utility.undo.Undoable
 import shirates.core.driver.*
 import shirates.core.driver.TestMode.isiOS
+import shirates.core.driver.commandextension.cropImage
 import shirates.core.driver.commandextension.findElements
 import shirates.core.driver.commandextension.getCell
 import shirates.core.driver.commandextension.getSelector
 import shirates.core.driver.commandextension.helper.CellFlowContainer
+import shirates.core.logging.CodeExecutionContext
 import shirates.core.logging.TestLog
 import shirates.core.utility.element.ElementCategoryExpressionUtility
 import shirates.core.utility.exists
 import shirates.core.utility.fileExists
+import shirates.core.utility.image.BufferedImageUtility
 import shirates.core.utility.listFiles
 import shirates.core.utility.toPath
 import java.io.FileNotFoundException
@@ -559,5 +563,17 @@ class EditViewModel(
         for (item in candidates) {
             satellitesViewModel.addItem(item)
         }
+    }
+
+    fun saveSelectedElementImage() {
+
+        val imageFile = selectedScreenItem?.imageFile ?: return
+        val image = BufferedImageUtility.getBufferedImage(imageFile)
+        val lastScreenshotImage = CodeExecutionContext.lastScreenshotImage
+        CodeExecutionContext.lastScreenshotImage = image
+        val testElement = selectedSelectorItem?.testElement ?: return
+        testElement.cropImage(fileName = "$selectedNickname${testDrive.imageProfile}", refresh = false)
+        testElement.lastCropInfo?.croppedImage?.setToClipboard()
+        CodeExecutionContext.lastScreenshotImage = lastScreenshotImage
     }
 }
